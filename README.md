@@ -1,2 +1,91 @@
-# Fontaine
-High functional Stats (overlay-like) mod for Hypixel Bedwars &amp; Duels
+<h1 align="center">Fontaine</h1>
+<div align="center">
+![a_25ea8a59a3591092b0ab885feec63302](https://github.com/user-attachments/assets/e3c0210c-fad8-4be4-922f-199c01a3b167)
+</div>
+<div align="center">
+High functional & API keyless Stats (overlay-like) Forge mod, that utilizes Scraping, for Hypixel Bedwars &amp; Duels
+</div>
+## Features
+
+- Check Bedwars stats of the people that's in your game
+
+- Check Classic Duels stats of your opponent when you queue a Classic duels match
+
+- Ability to set Minimum FKDR to show
+
+- Stars & FKDR on Tablist like Lilith
+
+- Urchin API support for Sniper & Cheater tags
+
+- Check any player's bedwars stats with `/bw`
+
+- Custom tags, gain quick more information about the players you're facing.
+
+- Does not use any API key (for stats fetching), purely relies on Web Scraping
+
+- Pretty
+
+
+<details>
+<summary>Showcase</summary>
+<div align="center">
+![image](https://github.com/user-attachments/assets/de154698-8eac-49c7-884f-eedd31f4385f)
+![image](https://github.com/user-attachments/assets/d0ba280e-930f-439d-b6ed-3a258f778100)
+![image](https://github.com/user-attachments/assets/58d5a619-fb04-48c3-b0da-19df92880c6b)
+![image](https://github.com/user-attachments/assets/40f62348-4c3d-4577-acc1-48051b34edf9)
+![image](https://github.com/user-attachments/assets/002a5a66-a5fd-49a1-b1be-7a45a8647553)
+
+
+</div>
+</details>
+
+## Download
+
+Go to the releases tab and download, alternatively, you can join our Discord.
+
+[Discord](https://discord.gg/3cH4yyf5Xp)
+
+## Support and feedback
+
+You can open an issue ticket or join our discord to discuss suggestions, feedback and lot more
+
+## Description
+
+Fontaine is an internal Forge 1.8.9 mod for Hypixel Bedwars, allows its users to check the stats of the players in their game, without having to bother with an external overlay, proxy, or an API key. 
+
+
+## Known issues
+
+- Doesn't work on few VPN's, cant reproduce. PIA & Windscribe should work.
+
+- URCHIN 404: This error is caused by Urchin API not having cached the player the overlay is querying, need to wait for Urchin to fix it.
+
+- Failed to fetch stats for.. 500: Mostly means the account it's querying is very new, and Minecraft API cache can't return an UUID for them. Means they probably have no stats.
+
+- If /tabstats causes performance issues, recommended to disable it
+
+
+## How-To
+
+When you load the mod for the first time, it creates a config file in your config folder (.minecraft\config) named statsify.json.
+
+To **check the stats of players in your game**, type `/who` in-game
+
+To set the Minimum FKDR to show on `/who`, type `/minfkdr <number>`
+
+To enable / disable **stats on tablist**, type `/tabstats <on/off>`
+
+To enable / disable **custom tags**, or get information about them, type `/bwtags`
+
+To toggle **Urchin API** type `/urchin`, to set your API key type `/urchinkey` (Get your API key at [discord.gg/urchin](https://discord.gg/urchin))
+
+To check an **individual**'s bedwars stats type `/bw <username>`
+
+To display **help command** type `/st`
+
+Stats checking for classic duels is automatic, and not toggleable. Does not have any settings.
+
+
+## Owner Info
+
+`melissalmao` - Melissa (fwrina)
