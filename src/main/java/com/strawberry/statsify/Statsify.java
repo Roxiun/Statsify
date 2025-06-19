@@ -57,6 +57,7 @@ public class Statsify {
     private Boolean urchin = false;
     private Boolean reqUUID = true;
     private Boolean autowho = true;
+    private String tabFormat = "bracket_star_name_dot_fkdr";
     private static final Map<String, List<String>> playerSuffixes = new HashMap<>();
     private final Minecraft mc = Minecraft.getMinecraft();
     private int minFkdr = DEFAULT_MIN_FKDR;
@@ -79,6 +80,7 @@ public class Statsify {
         ClientCommandHandler.instance.registerCommand(new UrchinTagsToggleCommand());
         ClientCommandHandler.instance.registerCommand(new RequireUUIDToggleCommand());
         ClientCommandHandler.instance.registerCommand(new AutoWhoToggleCommand());
+        ClientCommandHandler.instance.registerCommand(new TabFormatSetCommand());
     }
 
     @SubscribeEvent
@@ -151,7 +153,20 @@ public class Statsify {
 
                 if (!name.endsWith("\u30fb" + suffixv.get(1))) {
                     String teamColor = team.length() >= 2 ? team.substring(0, 2) : "";
-                    String newDisplayName = team + "\u00a77[" + suffixv.get(0) + "\u00a77] " + teamColor + name + "\u30fb" + suffixv.get(1);
+                    String newDisplayName = null;
+                    if (tabFormat.equals("bracket_star_name_dot_fkdr")) {
+                        newDisplayName = team + "\u00a77[" + suffixv.get(0) + "\u00a77] " + teamColor + name + "\u30fb" + suffixv.get(1);
+                    }
+                    else if (tabFormat.equals("star_dot_name_dot_fkdr")) {
+                        newDisplayName = team + suffixv.get(0) + "\u30fb" + teamColor + name + "\u30fb" + suffixv.get(1);
+                    }
+                    else if (tabFormat.equals("name_dot_fkdr")) {
+                        newDisplayName = team + teamColor + name + "\u30fb" + suffixv.get(1);
+                    }
+                    else {
+                        newDisplayName = team + "\u00a77[" + suffixv.get(0) + "\u00a77] " + teamColor + name + "\u30fb" + suffixv.get(1);
+
+                    }
                     playerInfo.setDisplayName(new ChatComponentText(newDisplayName));
                 }
             }
@@ -490,7 +505,7 @@ public class Statsify {
     public String fetchUrchinTags(String playerName) throws IOException {
 
 
-        String tagsURL = "https://urchin.ws/player/" + playerName + "?api_key=" + urchinkey;
+        String tagsURL = "https://urchin.ws/player/" + playerName + "?key=" + urchinkey + "&sources=MANUAL";
         URL tagsAPIURL = new URL(tagsURL);
         HttpURLConnection statsConnection = (HttpURLConnection) tagsAPIURL.openConnection();
         statsConnection.setRequestProperty("User-Agent",
@@ -523,10 +538,6 @@ public class Statsify {
                 if (matcher.find()) {
                     String type = matcher.group(1);
                     String reason = matcher.group(2);
-                   /* String addedOn = matcher.group(3);
-                    LocalDateTime dateTime = LocalDateTime.parse(addedOn.substring(0, 19));
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM HH:mm:ss");
-                    String formattedDate = dateTime.format(formatter);*/
                     return "\u00a7r" + type + ". \u00a7rReason: \u00a76" + reason;
                 } else {
 
@@ -1028,7 +1039,7 @@ Prename check end
             }
 
             mode = args[0].toLowerCase();
-            saveConfig(minFkdr, mode, tags,tabstats,urchin,urchinkey,reqUUID,autowho);
+            saveConfig(minFkdr, mode, tags,tabstats,urchin,urchinkey,reqUUID,autowho, tabFormat);
             sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7aMode set to: " + mode));
         }
 
@@ -1040,7 +1051,7 @@ Prename check end
     private void loadConfig() {
         File configFile = new File(CONFIG_PATH);
         if (!configFile.exists()) {
-            saveConfig(DEFAULT_MIN_FKDR, DEFAULT_MODE, false,true,false,"",true,true);
+            saveConfig(DEFAULT_MIN_FKDR, DEFAULT_MODE, false,true,false,"",true,true, "bracket_star_name_dot_fkdr");
             return;
         }
 
@@ -1054,6 +1065,7 @@ Prename check end
             reqUUID = json.has("reqUUID") ? json.get("reqUUID").getAsBoolean() : true;
             autowho = json.has("autowho") ? json.get("autowho").getAsBoolean() : true;
             urchinkey = json.has("urchinkey") ? json.get("urchinkey").getAsString() : "";
+            tabFormat = json.has("tabformat") ? json.get("tabformat").getAsString() : "bracket_star_name_dot_fkdr";
         } catch (IOException e) {
             e.printStackTrace();
             minFkdr = DEFAULT_MIN_FKDR;
@@ -1064,10 +1076,11 @@ Prename check end
             urchinkey = "";
             reqUUID = true;
             autowho = true;
+            tabFormat = "bracket_star_name_dot_fkdr";
         }
     }
 
-    private void saveConfig(int minFkdrValue, String modeValue, boolean TagsConfig, boolean TabstatsConfig, boolean UrchinConfig, String UrchinkeySetting, boolean reqUUID, boolean autowhosetting) {
+    private void saveConfig(int minFkdrValue, String modeValue, boolean TagsConfig, boolean TabstatsConfig, boolean UrchinConfig, String UrchinkeySetting, boolean reqUUID, boolean autowhosetting, String tabformat) {
         File configFile = new File(CONFIG_PATH);
         configFile.getParentFile().mkdirs();
 
@@ -1081,6 +1094,7 @@ Prename check end
             json.addProperty("urchinkey", UrchinkeySetting);
             json.addProperty("reqUUID", reqUUID);
             json.addProperty("autowho", autowhosetting);
+            json.addProperty("tabformat", tabformat);
             new Gson().toJson(json, writer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -1109,7 +1123,7 @@ Prename check end
             try {
                 int value = Integer.parseInt(args[0]);
                 minFkdr = value;
-                saveConfig(value, mode,tags,tabstats,urchin,urchinkey,reqUUID,autowho);
+                saveConfig(value, mode,tags,tabstats,urchin,urchinkey,reqUUID,autowho,tabFormat);
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7aMinimum FKDR set to: " + value));
             } catch (NumberFormatException e) {
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7cInvalid number! Use an integer value."));
@@ -1143,7 +1157,7 @@ Prename check end
             try {
                 String value = args[0].toString();
                 urchinkey = value;
-                saveConfig(minFkdr, mode,tags,tabstats,urchin,urchinkey,reqUUID,autowho);
+                saveConfig(minFkdr, mode,tags,tabstats,urchin,urchinkey,reqUUID,autowho,tabFormat);
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7aUrchin API Key set to: " + value));
             } catch(Exception e) {
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7cfish."));
@@ -1259,7 +1273,8 @@ Prename check end
             sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/bw <username>:\u00a7b Manually check bedwars stats of a player.\u00a7r"));
             sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/minfkdr <value>:\u00a7b Set minimum FKDR to show on running /who. Default -1.\u00a7r"));
             sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/bwtags <info/on/off>:\u00a7b Toggle tags on /who (on/off) or view information (info). Default off. [indev]\u00a7r"));
-            sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/tabstats <on/off>:\u00a7b Toggle printing stats on tablist. Default on. (TEAM [STAR] Name\u30fbFKDR)\u00a7r"));
+            sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/tabstats <on/off>:\u00a7b Toggle printing stats on tablist. Default on.\u00a7r"));
+            sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/tabformat <1-3>:\u00a7b Edit the way stats show on your tablist. /tabformat for info.\u00a7r"));
             sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/cleartabcache:\u00a7b Clear stats cache of players if you're having issues.\u00a7r"));
             sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/reqUUID <on/off>:\u00a7b If the stats check is failing try turning this off.\u00a7r"));
             sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/urchin <on/off>:\u00a7b Toggle Urchin API on and off. Default off.\u00a7r"));
@@ -1329,12 +1344,12 @@ Prename check end
 
             }
             if(arg.equalsIgnoreCase("on")) {
-                saveConfig(minFkdr,mode,true,tabstats,urchin,urchinkey,reqUUID,autowho);
+                saveConfig(minFkdr,mode,true,tabstats,urchin,urchinkey,reqUUID,autowho,tabFormat);
                 tags = true;
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7aTags toggled: " + arg));
             }
             if(arg.equalsIgnoreCase("off")) {
-                saveConfig(minFkdr,mode,false,tabstats,urchin,urchinkey,reqUUID,autowho);
+                saveConfig(minFkdr,mode,false,tabstats,urchin,urchinkey,reqUUID,autowho,tabFormat);
                 tags = false;
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7aTags toggled: " + arg));
             }
@@ -1367,12 +1382,12 @@ Prename check end
 
             String arg = args[0].toLowerCase();
             if(arg.equalsIgnoreCase("on")) {
-                saveConfig(minFkdr,mode,tags,true,urchin,urchinkey,reqUUID,autowho);
+                saveConfig(minFkdr,mode,tags,true,urchin,urchinkey,reqUUID,autowho,tabFormat);
                 tabstats = true;
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7aTabstats toggled: " + arg));
             }
             if(arg.equalsIgnoreCase("off")) {
-                saveConfig(minFkdr,mode,tags,false,urchin,urchinkey,reqUUID,autowho);
+                saveConfig(minFkdr,mode,tags,false,urchin,urchinkey,reqUUID,autowho,tabFormat);
                 tabstats = false;
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7aTabstats toggled: " + arg));
             }
@@ -1403,12 +1418,12 @@ Prename check end
 
             String arg = args[0].toLowerCase();
             if(arg.equalsIgnoreCase("on")) {
-                saveConfig(minFkdr,mode,tags,tabstats,urchin,urchinkey,true,autowho);
+                saveConfig(minFkdr,mode,tags,tabstats,urchin,urchinkey,true,autowho,tabFormat);
                 reqUUID = true;
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7arequire UUID: " + arg));
             }
             if(arg.equalsIgnoreCase("off")) {
-                saveConfig(minFkdr,mode,tags,tabstats,urchin,urchinkey,false,autowho);
+                saveConfig(minFkdr,mode,tags,tabstats,urchin,urchinkey,false,autowho,tabFormat);
                 reqUUID = false;
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7arequire UUID: " + arg));
             }
@@ -1439,12 +1454,12 @@ Prename check end
 
             String arg = args[0].toLowerCase();
             if(arg.equalsIgnoreCase("on")) {
-                saveConfig(minFkdr,mode,tags,tabstats,urchin,urchinkey,reqUUID,true);
+                saveConfig(minFkdr,mode,tags,tabstats,urchin,urchinkey,reqUUID,true,tabFormat);
                 autowho = true;
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7aautoWHO: " + arg));
             }
             if(arg.equalsIgnoreCase("off")) {
-                saveConfig(minFkdr,mode,tags,tabstats,urchin,urchinkey,reqUUID,false);
+                saveConfig(minFkdr,mode,tags,tabstats,urchin,urchinkey,reqUUID,false,tabFormat);
                 autowho = false;
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7aautoWHO: " + arg));
             }
@@ -1475,12 +1490,12 @@ Prename check end
 
             String arg = args[0].toLowerCase();
             if(arg.equalsIgnoreCase("on")) {
-                saveConfig(minFkdr,mode,tags,tabstats,true,urchinkey,reqUUID,autowho);
+                saveConfig(minFkdr,mode,tags,tabstats,true,urchinkey,reqUUID,autowho,tabFormat);
                 urchin = true;
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7aUrchinAPI toggled: " + arg));
             }
             if(arg.equalsIgnoreCase("off")) {
-                saveConfig(minFkdr,mode,tags,tabstats,false,urchinkey,reqUUID,autowho);
+                saveConfig(minFkdr,mode,tags,tabstats,false,urchinkey,reqUUID,autowho,tabFormat);
                 urchin = false;
                 sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7aUrchinAPI toggled: " + arg));
             }
@@ -1509,6 +1524,65 @@ Prename check end
             playerSuffixes.clear();
 
         }
+        @Override
+        public int getRequiredPermissionLevel() {
+            return 0;
+        }
+    }
+
+
+    public class TabFormatSetCommand extends CommandBase {
+
+        @Override
+        public String getCommandName() {
+            return "tabformat";
+        }
+
+        @Override
+        public String getCommandUsage(ICommandSender sender) {
+            return "/tabformat <preset>";
+        }
+
+        @Override
+        public void processCommand(ICommandSender sender, String[] args) {
+            if (args.length != 1) {
+                sender.addChatMessage(new ChatComponentText("\u00a7r\u00a7b\u00a7lfon\u00a79\u00a7lta\u00a73\u00a7line\u00a7r"));
+                sender.addChatMessage(new ChatComponentText("\u00a7r\u00a7bmade by\u00a7e melissalmao\u00a7r"));
+                sender.addChatMessage(new ChatComponentText(""));
+                sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73Use /tabformat <number> to select a preset.\u00a7r"));
+                sender.addChatMessage(new ChatComponentText("\u00a7r        1) \u00a7dP \u00a77[\u00a76200\u272b\u00a77] \u00a7dFontaine\u30fb\u00a7f1.36\n" +
+                        "\u00a7r        2) \u00a7dP \u00a76200\u272b\u30fb\u00a7dFontaine\u30fb\u00a7f1.36\n" +
+                        "\u00a7r        3) \u00a7dP \u00a7dFontaine\u30fb\u00a7f1.36\n"));
+
+                sender.addChatMessage(new ChatComponentText(""));
+                return;
+            }
+
+            try {
+                String value = args[0].toString();
+
+                if("1".equals(value)){
+                    tabFormat = "bracket_star_name_dot_fkdr";
+                    saveConfig(minFkdr, mode,tags,tabstats,urchin,urchinkey,reqUUID,autowho,tabFormat);
+                    sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a72Tablist format set to 1."));
+                } else if ("2".equals(value)){
+                    tabFormat = "star_dot_name_dot_fkdr";
+                    saveConfig(minFkdr, mode,tags,tabstats,urchin,urchinkey,reqUUID,autowho,tabFormat);
+                    sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a72Tablist format set to 2."));
+                } else if ("3".equals(value)){
+                    tabFormat = "name_dot_fkdr";
+                    saveConfig(minFkdr, mode,tags,tabstats,urchin,urchinkey,reqUUID,autowho,tabFormat);
+                    sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a72Tablist format set to 3."));
+                }
+                else{
+                    sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7cInvalid value. 1-3."));
+                }
+
+            } catch(Exception e) {
+                sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7cfish."));
+            }
+        }
+
         @Override
         public int getRequiredPermissionLevel() {
             return 0;
