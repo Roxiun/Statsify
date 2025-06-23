@@ -1,4 +1,4 @@
-# BWS half broken. Keeps ratelimiting. Will change scraping sources later, and abandon this.
+# This project is no longer actively maintained
 
 <h1 align="center">Fontaine</h1>
 <p align="center">
