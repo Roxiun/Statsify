@@ -838,7 +838,7 @@ Prename check end
         }
 
         if (Stars >= 100 && Stars < 200) {
-            color = "\u00a7b";
+            color = "\u00A7f";
             return color + text + "\u272b";
         }
         if (Stars >= 200 && Stars < 300) {
