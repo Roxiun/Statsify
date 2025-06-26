@@ -78,7 +78,7 @@ public class Statsify {
         ClientCommandHandler.instance.registerCommand(new ClearCacheCommand());
         ClientCommandHandler.instance.registerCommand(new SetUrchinKeyCommand());
         ClientCommandHandler.instance.registerCommand(new UrchinTagsToggleCommand());
-        ClientCommandHandler.instance.registerCommand(new RequireUUIDToggleCommand());
+
         ClientCommandHandler.instance.registerCommand(new AutoWhoToggleCommand());
         ClientCommandHandler.instance.registerCommand(new TabFormatSetCommand());
     }
@@ -519,17 +519,9 @@ public class Statsify {
 
     public String fetchBedwarsStats(String playerName) throws IOException {
         try {
-        String uuidOrName = playerName;
+            String uuid = getUUIDFromName(playerName);
 
-            if (reqUUID) {
-                String uuid = fetchUUID(playerName);
-                if ("NICKED".equals(uuid)) {
-                    return getTabDisplayName(playerName) + " \u00a7cis nicked.";
-                }
-                uuidOrName = uuid;
-            }
-
-            String stjson = nadeshikoAPI(uuidOrName);
+            String stjson = nadeshikoAPI(uuid);
             if (stjson == null || stjson.isEmpty()) {
                 return getTabDisplayName(playerName) + " \u00a7cis possibly nicked.";
             }
@@ -606,7 +598,14 @@ public class Statsify {
 
     }
 
-
+    public String getUUIDFromName(String playerName) {
+        for (NetworkPlayerInfo info : Minecraft.getMinecraft().getNetHandler().getPlayerInfoMap()) {
+            if (info.getGameProfile().getName().equalsIgnoreCase(playerName)) {
+                return String.valueOf(info.getGameProfile().getId());
+            }
+        }
+        return null; // Player not found (probably not in tab list)
+    }
     private static String extractLevel(String html) {
         // From Quick Stats section
         Pattern pattern = Pattern.compile(">Level</span><span[^>]*?font-mono[^>]*?>(.*?)</span>");
@@ -1140,8 +1139,8 @@ Prename check end
         }
     }
     private String fetchPlayerStatss(String playerName) throws IOException {
-
-        String stjson = nadeshikoAPI(playerName);
+        String uuid = getUUIDFromName(playerName);
+        String stjson = nadeshikoAPI(uuid);
         if (stjson == null || stjson.isEmpty()) {
             return playerName + " \u00a7c is possibly nicked.";
         }
@@ -1246,7 +1245,6 @@ Prename check end
             sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/tabstats <on/off>:\u00a7b Toggle printing stats on tablist. Default on.\u00a7r"));
             sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/tabformat <1-3>:\u00a7b Edit the way stats show on your tablist. /tabformat for info.\u00a7r"));
             sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/cleartabcache:\u00a7b Clear stats cache of players if you're having issues.\u00a7r"));
-            sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/reqUUID <on/off>:\u00a7b If the stats check is failing try turning this off.\u00a7r"));
             sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/urchin <on/off>:\u00a7b Toggle Urchin API on and off. Default off.\u00a7r"));
             sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/urchinkey <key>:\u00a7b Set your urchin API key (discord.gg/urchin)\u00a7r"));
             sender.addChatMessage(new ChatComponentText("\u00a7r\u00a73/who:\u00a7b Check and print the stats of the players in your lobby.\u00a7r"));
@@ -1367,42 +1365,7 @@ Prename check end
             return 0;
         }
     }
-    public class RequireUUIDToggleCommand extends CommandBase {
 
-        @Override
-        public String getCommandName() {
-            return "reqUUID";
-        }
-
-        @Override
-        public String getCommandUsage(ICommandSender sender) {
-            return "/reqUUID <on/off>";
-        }
-
-        @Override
-        public void processCommand(ICommandSender sender, String[] args) {
-            if (args.length != 1 || (!args[0].equalsIgnoreCase("on") && !args[0].equalsIgnoreCase("off"))) {
-                sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7cInvalid usage! Use /reqUUID <on/off>"));
-                return;
-            }
-
-            String arg = args[0].toLowerCase();
-            if(arg.equalsIgnoreCase("on")) {
-                saveConfig(minFkdr,mode,tags,tabstats,urchin,urchinkey,true,autowho,tabFormat);
-                reqUUID = true;
-                sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7arequire UUID: " + arg));
-            }
-            if(arg.equalsIgnoreCase("off")) {
-                saveConfig(minFkdr,mode,tags,tabstats,urchin,urchinkey,false,autowho,tabFormat);
-                reqUUID = false;
-                sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7arequire UUID: " + arg));
-            }
-        }
-        @Override
-        public int getRequiredPermissionLevel() {
-            return 0;
-        }
-    }
     public class AutoWhoToggleCommand extends CommandBase {
 
         @Override
