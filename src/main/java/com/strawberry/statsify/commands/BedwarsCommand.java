@@ -2,6 +2,10 @@ package com.strawberry.statsify.commands;
 
 import com.mojang.authlib.GameProfile;
 import com.strawberry.statsify.api.NadeshikoApi;
+import com.strawberry.statsify.api.WinstreakApi;
+import com.strawberry.statsify.config.StatsifyOneConfig;
+import java.io.IOException;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.command.CommandBase;
@@ -9,15 +13,16 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 
-import java.io.IOException;
-import java.util.List;
-
 public class BedwarsCommand extends CommandBase {
 
     private final NadeshikoApi nadeshikoApi;
+    private final WinstreakApi winstreakApi;
+    private final StatsifyOneConfig config;
 
-    public BedwarsCommand() {
+    public BedwarsCommand(StatsifyOneConfig config) {
         this.nadeshikoApi = new NadeshikoApi();
+        this.winstreakApi = new WinstreakApi(config);
+        this.config = config;
     }
 
     @Override
@@ -33,32 +38,64 @@ public class BedwarsCommand extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (args.length != 1) {
-            sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r]\u00a7cInvalid usage!\u00a7r Use /bw \u00a75<username>\u00a7r"));
+            sender.addChatMessage(
+                new ChatComponentText(
+                    "\u00a7r[\u00a7bF\u00a7r]\u00a7cInvalid usage!\u00a7r Use /bw \u00a75<username>\u00a7r"
+                )
+            );
             return;
         }
 
         String username = args[0];
         new Thread(() -> {
             try {
-                String stats = nadeshikoApi.fetchPlayerStats(username);
+                String stats;
+                if (config.statsSource == 1) {
+                    // Winstreak.ws
+                    stats = winstreakApi.fetchPlayerStats(username);
+                } else {
+                    // Nadeshiko
+                    stats = nadeshikoApi.fetchPlayerStats(username);
+                }
+                String finalStats = stats;
                 Minecraft.getMinecraft().addScheduledTask(() ->
-                        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] " + stats))
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(
+                        new ChatComponentText(
+                            "\u00a7r[\u00a7bF\u00a7r] " + finalStats
+                        )
+                    )
                 );
             } catch (IOException e) {
                 Minecraft.getMinecraft().addScheduledTask(() ->
-                        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7cFailed to fetch stats for: \u00a7r" + username))
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(
+                        new ChatComponentText(
+                            "\u00a7r[\u00a7bF\u00a7r] \u00a7cFailed to fetch stats for: \u00a7r" +
+                                username
+                        )
+                    )
                 );
             }
-        }).start();
+        })
+            .start();
     }
 
     @Override
-    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+    public List<String> addTabCompletionOptions(
+        ICommandSender sender,
+        String[] args,
+        BlockPos pos
+    ) {
         if (args.length == 1) {
-            return getListOfStringsMatchingLastWord(args, Minecraft.getMinecraft().getNetHandler().getPlayerInfoMap().stream()
+            return getListOfStringsMatchingLastWord(
+                args,
+                Minecraft.getMinecraft()
+                    .getNetHandler()
+                    .getPlayerInfoMap()
+                    .stream()
                     .map(NetworkPlayerInfo::getGameProfile)
                     .map(GameProfile::getName)
-                    .toArray(String[]::new));
+                    .toArray(String[]::new)
+            );
         }
         return null;
     }

@@ -20,7 +20,7 @@ public class StatsifyCommand extends CommandBase {
     public void processCommand(ICommandSender sender, String[] args) {
         sender.addChatMessage(
             new ChatComponentText(
-                "\u00a7r\u00a7b\u00a7lfon\u00a79\u00a7lta\u00a73\u00a7line\u00a7r"
+                "\u00a7r\u00a7b\u00a7lsta\u00a79\u00a7tsi\u00a73\u00a7lfy\u00a7r"
             )
         );
         sender.addChatMessage(

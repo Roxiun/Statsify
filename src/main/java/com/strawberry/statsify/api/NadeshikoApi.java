@@ -3,7 +3,6 @@ package com.strawberry.statsify.api;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.strawberry.statsify.util.Utils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,20 +17,25 @@ public class NadeshikoApi {
 
     public String nadeshikoAPI(String uuid) {
         try {
-            String urlString = "https://nadeshiko.io/player/" + uuid + "/network";
+            String urlString =
+                "https://nadeshiko.io/player/" + uuid + "/network";
 
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            HttpURLConnection connection =
+                (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+            connection.setRequestProperty(
+                "User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            );
             connection.setRequestProperty("Accept", "application/json");
             int responseCode = connection.getResponseCode();
 
-
             if (responseCode == HttpURLConnection.HTTP_OK) {
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                BufferedReader in = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream())
+                );
                 StringBuilder response = new StringBuilder();
                 String inputLine;
 
@@ -40,14 +44,15 @@ public class NadeshikoApi {
                 }
                 in.close();
                 String responseString = response.toString();
-                Pattern pattern = Pattern.compile("playerData = JSON.parse\\(decodeURIComponent\\(\"(.*?)\"\\)\\)");
+                Pattern pattern = Pattern.compile(
+                    "playerData = JSON.parse\\(decodeURIComponent\\(\"(.*?)\"\\)\\)"
+                );
                 Matcher matcher = pattern.matcher(responseString.toString());
 
                 if (matcher.find()) {
                     String playerDataEncoded = matcher.group(1);
                     return URLDecoder.decode(playerDataEncoded, "UTF-8");
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,24 +61,45 @@ public class NadeshikoApi {
     }
 
     public String fetchPlayerStats(String playerName) throws IOException {
-        String uuid = new MojangApi().fetchUUID(playerName);
+        String uuid = Utils.getUUIDFromPlayerName(playerName);
+        if (uuid == null) {
+            return (
+                " \u00a7cCould not find " +
+                playerName +
+                " in the current lobby."
+            );
+        }
         String stjson = nadeshikoAPI(uuid);
         if (stjson == null || stjson.isEmpty()) {
-            return playerName + " \u00a7c is possibly nicked.";
+            return " \u00a7cFailed to get stats for " + playerName;
         }
 
-        JsonObject rootObject = new JsonParser().parse(stjson).getAsJsonObject();
+        JsonObject rootObject = new JsonParser()
+            .parse(stjson)
+            .getAsJsonObject();
 
         JsonObject profile = rootObject.getAsJsonObject("profile");
-        String displayedName = profile.has("tagged_name") ? profile.get("tagged_name").getAsString() : "[]";
+        String displayedName = profile.has("tagged_name")
+            ? profile.get("tagged_name").getAsString()
+            : "[]";
         JsonObject ach = rootObject.getAsJsonObject("achievements");
-        String level = ach.has("bedwars_level") ? ach.get("bedwars_level").getAsString() : "0";
+        String level = ach.has("bedwars_level")
+            ? ach.get("bedwars_level").getAsString()
+            : "0";
         level = Utils.formatStars(level);
 
-        JsonObject bedwarsStats = rootObject.getAsJsonObject("stats").getAsJsonObject("Bedwars");
-        int finalKills = bedwarsStats.has("final_kills_bedwars") ? bedwarsStats.get("final_kills_bedwars").getAsInt() : 0;
-        int finalDeaths = bedwarsStats.has("final_deaths_bedwars") ? bedwarsStats.get("final_deaths_bedwars").getAsInt() : 0;
-        double fkdr = (finalDeaths == 0) ? finalKills : (double) finalKills / finalDeaths;
+        JsonObject bedwarsStats = rootObject
+            .getAsJsonObject("stats")
+            .getAsJsonObject("Bedwars");
+        int finalKills = bedwarsStats.has("final_kills_bedwars")
+            ? bedwarsStats.get("final_kills_bedwars").getAsInt()
+            : 0;
+        int finalDeaths = bedwarsStats.has("final_deaths_bedwars")
+            ? bedwarsStats.get("final_deaths_bedwars").getAsInt()
+            : 0;
+        double fkdr = (finalDeaths == 0)
+            ? finalKills
+            : (double) finalKills / finalDeaths;
         String fkdrColor = "\u00a77";
         if (fkdr >= 1 && fkdr < 3) fkdrColor = "\u00a7f";
         if (fkdr >= 3 && fkdr < 8) fkdrColor = "\u00a7a";
@@ -82,6 +108,13 @@ public class NadeshikoApi {
         if (fkdr > 25) fkdrColor = "\u00a74";
         DecimalFormat df = new DecimalFormat("#.##");
         String formattedFkdr = df.format(fkdr);
-        return displayedName + " \u00a7r" + level +" FKDR: " + fkdrColor + formattedFkdr;
+        return (
+            displayedName +
+            " \u00a7r" +
+            level +
+            " FKDR: " +
+            fkdrColor +
+            formattedFkdr
+        );
     }
 }

@@ -7,6 +7,8 @@ import com.strawberry.statsify.commands.BedwarsCommand;
 import com.strawberry.statsify.commands.ClearCacheCommand;
 import com.strawberry.statsify.commands.StatsifyCommand;
 import com.strawberry.statsify.config.StatsifyOneConfig;
+import com.strawberry.statsify.util.NickUtils;
+import com.strawberry.statsify.util.NumberDenicker;
 import com.strawberry.statsify.util.Utils;
 import java.io.IOException;
 import java.util.*;
@@ -20,6 +22,7 @@ import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -29,14 +32,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Statsify {
 
     public static final String MODID = "statsify";
-    public static final String NAME = "Hypixel Stats Mod";
-    public static final String VERSION = "4.0";
+    public static final String NAME = "Statsify";
+    public static final String VERSION = "4.1.0";
 
     private final Minecraft mc = Minecraft.getMinecraft();
     public static StatsifyOneConfig config;
     private final HypixelApi hypixelApi;
     private final UrchinApi urchinApi;
     private final PlanckeApi planckeApi;
+    private NumberDenicker numberDenicker;
+    private NickUtils nickUtils;
 
     private List<String> onlinePlayers = new ArrayList<>();
     private final Map<String, List<String>> playerSuffixes = new HashMap<>();
@@ -50,9 +55,13 @@ public class Statsify {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         config = new StatsifyOneConfig();
+        numberDenicker = new NumberDenicker(config);
+        nickUtils = new NickUtils();
         MinecraftForge.EVENT_BUS.register(this);
 
-        ClientCommandHandler.instance.registerCommand(new BedwarsCommand());
+        ClientCommandHandler.instance.registerCommand(
+            new BedwarsCommand(config)
+        );
         ClientCommandHandler.instance.registerCommand(new StatsifyCommand());
         ClientCommandHandler.instance.registerCommand(
             new ClearCacheCommand(playerSuffixes)
@@ -61,6 +70,7 @@ public class Statsify {
 
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
+        numberDenicker.onChat(event);
         String message = event.message.getUnformattedText();
         if (config.autoWho) {
             if (
@@ -77,6 +87,7 @@ public class Statsify {
             String playersString = message.substring("ONLINE:".length()).trim();
             String[] players = playersString.split(",\\s*");
             onlinePlayers = new ArrayList<>(Arrays.asList(players));
+            nickUtils.updateNickedPlayers(onlinePlayers);
             checkStatsRatelimitless();
             if (config.urchin) {
                 checkUrchinTags();
@@ -96,14 +107,23 @@ public class Statsify {
                 } catch (IOException e) {
                     mc.thePlayer.addChatMessage(
                         new ChatComponentText(
-                            "\u00a7r[\u00a7bF\u00a7r] \u00a7c" +
-                                username +
-                                " is possibly nicked.\u00a7r"
+                            "\u00a7r[\u00a7bF\u00a7r] \u00a7cFailed to get stats for " +
+                                username
                         )
                     );
                 }
             })
                 .start();
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldLoad(WorldEvent.Load event) {
+        if (numberDenicker != null) {
+            numberDenicker.onWorldChange();
+        }
+        if (nickUtils != null) {
+            nickUtils.clearNicks();
         }
     }
 
@@ -125,19 +145,30 @@ public class Statsify {
             ) continue;
 
             String playerName = playerInfo.getGameProfile().getName();
+            if (playerName == null) continue;
             List<String> suffixv = playerSuffixes.get(playerName);
+            boolean isNicked = nickUtils.isNicked(playerName);
+            String currentDisplayName;
+            if (playerInfo.getDisplayName() != null) {
+                currentDisplayName = playerInfo
+                    .getDisplayName()
+                    .getFormattedText();
+            } else {
+                currentDisplayName = playerName;
+            }
 
             if (suffixv != null && suffixv.size() >= 2) {
+                // Player has stats, so they are not nicked
                 String[] tabData = Utils.getTabDisplayName2(playerName);
                 String team = tabData[0],
-                    name = tabData[1],
-                    suffix = tabData[2];
+                    name = tabData[1];
 
-                if (!name.endsWith("\u30fb" + suffixv.get(1))) {
+                if (!currentDisplayName.contains("\u30fb" + suffixv.get(1))) {
                     String teamColor = team.length() >= 2
                         ? team.substring(0, 2)
                         : "";
                     String newDisplayName;
+
                     switch (config.tabFormat) {
                         case 1:
                             newDisplayName =
@@ -174,6 +205,27 @@ public class Statsify {
                         new ChatComponentText(newDisplayName)
                     );
                 }
+            } else if (
+                isNicked && !currentDisplayName.contains("\u00a7c[NICK]")
+            ) {
+                // Player is nicked, does not have stats
+                String[] tabData = Utils.getTabDisplayName2(playerName);
+                if (tabData != null && tabData.length >= 3) {
+                    String team = tabData[0] != null ? tabData[0] : "";
+                    String name = tabData[1] != null ? tabData[1] : "";
+                    String suffix = tabData[2] != null ? tabData[2] : "";
+                    playerInfo.setDisplayName(
+                        new ChatComponentText(
+                            team + "\u00a7c[NICK] " + name + suffix
+                        )
+                    );
+                } else {
+                    playerInfo.setDisplayName(
+                        new ChatComponentText(
+                            "\u00a7c[NICK] " + currentDisplayName
+                        )
+                    );
+                }
             }
         }
     }
@@ -181,6 +233,7 @@ public class Statsify {
     private void checkUrchinTags() {
         ExecutorService executor = Executors.newFixedThreadPool(5);
         for (String playerName : onlinePlayers) {
+            if (nickUtils.isNicked(playerName)) continue;
             executor.submit(() -> {
                 try {
                     String tags = urchinApi
@@ -233,6 +286,7 @@ public class Statsify {
         ExecutorService executor = Executors.newFixedThreadPool(poolSize);
 
         for (String playerName : onlinePlayers) {
+            if (nickUtils.isNicked(playerName)) continue;
             executor.submit(() -> {
                 try {
                     String stats = hypixelApi.fetchBedwarsStats(
@@ -242,7 +296,7 @@ public class Statsify {
                         config.tabStats,
                         playerSuffixes
                     );
-                    if (!stats.isEmpty()) {
+                    if (!stats.isEmpty() && config.printStats) {
                         mc.addScheduledTask(() ->
                             mc.thePlayer.addChatMessage(
                                 new ChatComponentText(

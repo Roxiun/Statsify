@@ -4,53 +4,86 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.strawberry.statsify.util.TagUtils;
 import com.strawberry.statsify.util.Utils;
-import net.minecraft.util.EnumChatFormatting;
-
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.util.EnumChatFormatting;
 
 public class HypixelApi {
 
     private final NadeshikoApi nadeshikoApi;
-    private final MojangApi mojangApi;
 
     public HypixelApi() {
         this.nadeshikoApi = new NadeshikoApi();
-        this.mojangApi = new MojangApi();
     }
 
-    public String fetchBedwarsStats(String playerName, int minFkdr, boolean tags, boolean tabstats, Map<String, List<String>> playerSuffixes) throws IOException {
+    public String fetchBedwarsStats(
+        String playerName,
+        int minFkdr,
+        boolean tags,
+        boolean tabstats,
+        Map<String, List<String>> playerSuffixes
+    ) throws IOException {
         try {
-            String uuid = mojangApi.getUUIDFromName(playerName);
+            String uuid = Utils.getUUIDFromPlayerName(playerName);
+            if (uuid == null) {
+                return (
+                    "\u00a7cCould not find " +
+                    Utils.getTabDisplayName(playerName) +
+                    " in the current lobby."
+                );
+            }
 
             String stjson = nadeshikoApi.nadeshikoAPI(uuid);
             if (stjson == null || stjson.isEmpty()) {
-                return Utils.getTabDisplayName(playerName) + " \u00a7cis possibly nicked.";
+                return (
+                    "\u00a7cFailed to get stats for " +
+                    Utils.getTabDisplayName(playerName)
+                );
             }
 
-            JsonObject rootObject = new JsonParser().parse(stjson).getAsJsonObject();
+            JsonObject rootObject = new JsonParser()
+                .parse(stjson)
+                .getAsJsonObject();
             JsonObject profile = rootObject.getAsJsonObject("profile");
-            String displayedName = profile.has("tagged_name") ? profile.get("tagged_name").getAsString() : playerName;
+            String displayedName = profile.has("tagged_name")
+                ? profile.get("tagged_name").getAsString()
+                : playerName;
             JsonObject ach = rootObject.getAsJsonObject("achievements");
-            String levelStr = ach.has("bedwars_level") ? ach.get("bedwars_level").getAsString() : "0";
+            String levelStr = ach.has("bedwars_level")
+                ? ach.get("bedwars_level").getAsString()
+                : "0";
             String formattedStars = Utils.formatStars(levelStr);
 
-            JsonObject bedwarsStats = rootObject.getAsJsonObject("stats").getAsJsonObject("Bedwars");
+            JsonObject bedwarsStats = rootObject
+                .getAsJsonObject("stats")
+                .getAsJsonObject("Bedwars");
 
-            String finalKillsStr = bedwarsStats.has("final_kills_bedwars") ? bedwarsStats.get("final_kills_bedwars").getAsString() : "0";
-            String finalDeathsStr = bedwarsStats.has("final_deaths_bedwars") ? bedwarsStats.get("final_deaths_bedwars").getAsString() : "0";
-            int wins = bedwarsStats.has("wins_bedwars") ? bedwarsStats.get("wins_bedwars").getAsInt() : 0;
-            int losses = bedwarsStats.has("losses_bedwars") ? bedwarsStats.get("losses_bedwars").getAsInt() : 0;
+            String finalKillsStr = bedwarsStats.has("final_kills_bedwars")
+                ? bedwarsStats.get("final_kills_bedwars").getAsString()
+                : "0";
+            String finalDeathsStr = bedwarsStats.has("final_deaths_bedwars")
+                ? bedwarsStats.get("final_deaths_bedwars").getAsString()
+                : "0";
+            int wins = bedwarsStats.has("wins_bedwars")
+                ? bedwarsStats.get("wins_bedwars").getAsInt()
+                : 0;
+            int losses = bedwarsStats.has("losses_bedwars")
+                ? bedwarsStats.get("losses_bedwars").getAsInt()
+                : 0;
             double wlr = losses == 0 ? wins : (double) wins / losses;
             DecimalFormat dfm = new DecimalFormat("#.##");
             String wlrStr = dfm.format(wlr);
-            String wsStr = bedwarsStats.has("winstreak") ? bedwarsStats.get("winstreak").getAsString() : "0";
+            String wsStr = bedwarsStats.has("winstreak")
+                ? bedwarsStats.get("winstreak").getAsString()
+                : "0";
 
             int finalKills = Integer.parseInt(finalKillsStr.replace(",", ""));
             int finalDeaths = Integer.parseInt(finalDeathsStr.replace(",", ""));
-            double fkdrValue = finalDeaths == 0 ? finalKills : (double) finalKills / finalDeaths;
+            double fkdrValue = finalDeaths == 0
+                ? finalKills
+                : (double) finalKills / finalDeaths;
 
             if (fkdrValue < minFkdr) {
                 return "";
@@ -73,28 +106,81 @@ public class HypixelApi {
 
             String tabfkdr = fkdrColor + formattedFkdr;
             if (tabstats) {
-                playerSuffixes.put(playerName, java.util.Arrays.asList(formattedStars, tabfkdr));
+                playerSuffixes.put(
+                    playerName,
+                    java.util.Arrays.asList(formattedStars, tabfkdr)
+                );
             }
 
             if (tags) {
-                String tagsValue = new TagUtils().buildTags(playerName, uuid, Integer.parseInt(levelStr), fkdrValue, winstreak, finalKills, finalDeaths);
+                String tagsValue = new TagUtils().buildTags(
+                    playerName,
+                    uuid,
+                    Integer.parseInt(levelStr),
+                    fkdrValue,
+                    winstreak,
+                    finalKills,
+                    finalDeaths
+                );
                 if (tagsValue.endsWith(" ")) {
                     tagsValue = tagsValue.substring(0, tagsValue.length() - 1);
                 }
                 if (formattedWinstreak.isEmpty()) {
-                    return Utils.getTabDisplayName(playerName) + " \u00a7r" + formattedStars + "\u00a7r\u00a77 |\u00a7r FKDR: " + fkdrColor + formattedFkdr + " \u00a7r\u00a77|\u00a7r [ " + tagsValue + " ]";
+                    return (
+                        Utils.getTabDisplayName(playerName) +
+                        " \u00a7r" +
+                        formattedStars +
+                        "\u00a7r\u00a77 |\u00a7r FKDR: " +
+                        fkdrColor +
+                        formattedFkdr +
+                        " \u00a7r\u00a77|\u00a7r [ " +
+                        tagsValue +
+                        " ]"
+                    );
                 } else {
-                    return Utils.getTabDisplayName(playerName) + " \u00a7r" + formattedStars + "\u00a7r\u00a77 |\u00a7r FKDR: " + fkdrColor + formattedFkdr + " \u00a7r\u00a77|\u00a7r WS: " + formattedWinstreak + "\u00a7r [ " + tagsValue + " ]";
+                    return (
+                        Utils.getTabDisplayName(playerName) +
+                        " \u00a7r" +
+                        formattedStars +
+                        "\u00a7r\u00a77 |\u00a7r FKDR: " +
+                        fkdrColor +
+                        formattedFkdr +
+                        " \u00a7r\u00a77|\u00a7r WS: " +
+                        formattedWinstreak +
+                        "\u00a7r [ " +
+                        tagsValue +
+                        " ]"
+                    );
                 }
             } else {
                 if (formattedWinstreak.isEmpty()) {
-                    return Utils.getTabDisplayName(playerName) + " \u00a7r" + formattedStars + "\u00a7r\u00a77 |\u00a7r FKDR: " + fkdrColor + formattedFkdr + "\u00a7r";
+                    return (
+                        Utils.getTabDisplayName(playerName) +
+                        " \u00a7r" +
+                        formattedStars +
+                        "\u00a7r\u00a77 |\u00a7r FKDR: " +
+                        fkdrColor +
+                        formattedFkdr +
+                        "\u00a7r"
+                    );
                 } else {
-                    return Utils.getTabDisplayName(playerName) + " \u00a7r" + formattedStars + "\u00a7r\u00a77 |\u00a7r FKDR: " + fkdrColor + formattedFkdr + " \u00a7r\u00a77|\u00a7r WS: " + formattedWinstreak + "\u00a7r";
+                    return (
+                        Utils.getTabDisplayName(playerName) +
+                        " \u00a7r" +
+                        formattedStars +
+                        "\u00a7r\u00a77 |\u00a7r FKDR: " +
+                        fkdrColor +
+                        formattedFkdr +
+                        " \u00a7r\u00a77|\u00a7r WS: " +
+                        formattedWinstreak +
+                        "\u00a7r"
+                    );
                 }
             }
         } catch (Exception e) {
-            return EnumChatFormatting.RED + playerName + " is possibly nicked.";
+            return (
+                EnumChatFormatting.RED + "Failed to get stats for " + playerName
+            );
         }
     }
 }
