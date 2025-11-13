@@ -1,4 +1,4 @@
-<h1 align="center">Fontaine</h1>
+<h1 align="center">Statsify</h1>
 <p align="center">
 <img width="1920" height="392" src="https://i.ibb.co/hRmQV02D/Ads-z.png">
 </p>
@@ -26,6 +26,8 @@ High functional & API keyless Stats (overlay-like) Forge mod, that utilizes Scra
 
 - Does not use any API key (for stats fetching), purely relies on Web Scraping
 
+- Supports Aurora API number denicking
+
 - Pretty
 
 ## Showcase
@@ -49,7 +51,7 @@ Go to the releases tab and download.
 
 ## Description
 
-Fontaine is an internal Forge 1.8.9 mod for Hypixel Bedwars, allows its users to check the stats of the players in their game, without having to bother with an external overlay, proxy, or an API key.
+Statsify is an internal Forge 1.8.9 mod for Hypixel Bedwars, allows its users to check the stats of the players in their game, without having to bother with an external overlay, proxy, or an API key.
 
 
 ## Known issues
@@ -79,6 +81,8 @@ To toggle **Urchin API** check the settings of the mod in OneConfig, you can als
 To check an **individual**'s bedwars stats type `/bw <username>`
 
 To display **help command** type `/st`
+
+To use the **number denicker** add the Aurora API key, you can get a key from [here](https://discord.com/oauth2/authorize?client_id=1244205279697174539)
 
 Stats checking for classic duels is automatic, and not toggleable. Does not have any settings.
 
