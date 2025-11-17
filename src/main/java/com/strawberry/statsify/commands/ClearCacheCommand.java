@@ -1,11 +1,10 @@
 package com.strawberry.statsify.commands;
 
+import java.util.List;
+import java.util.Map;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
-
-import java.util.List;
-import java.util.Map;
 
 public class ClearCacheCommand extends CommandBase {
 
@@ -27,7 +26,9 @@ public class ClearCacheCommand extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        sender.addChatMessage(new ChatComponentText("\u00a7r[\u00a7bF\u00a7r] \u00a7aTab cache has been wiped"));
+        sender.addChatMessage(
+            new ChatComponentText("§r[§bF§r] §aTab cache has been wiped")
+        );
         playerSuffixes.clear();
     }
 

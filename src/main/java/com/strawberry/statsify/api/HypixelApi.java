@@ -29,7 +29,7 @@ public class HypixelApi {
             String uuid = Utils.getUUIDFromPlayerName(playerName);
             if (uuid == null) {
                 return (
-                    "\u00a7cCould not find " +
+                    "§cCould not find " +
                     Utils.getTabDisplayName(playerName) +
                     " in the current lobby."
                 );
@@ -38,7 +38,7 @@ public class HypixelApi {
             String stjson = nadeshikoApi.nadeshikoAPI(uuid);
             if (stjson == null || stjson.isEmpty()) {
                 return (
-                    "\u00a7cFailed to get stats for " +
+                    "§cFailed to get stats for " +
                     Utils.getTabDisplayName(playerName)
                 );
             }
@@ -89,12 +89,12 @@ public class HypixelApi {
                 return "";
             }
 
-            String fkdrColor = "\u00a77";
-            if (fkdrValue >= 1 && fkdrValue < 3) fkdrColor = "\u00a7f";
-            if (fkdrValue >= 3 && fkdrValue < 8) fkdrColor = "\u00a7a";
-            if (fkdrValue >= 8 && fkdrValue < 16) fkdrColor = "\u00a76";
-            if (fkdrValue >= 16 && fkdrValue < 25) fkdrColor = "\u00a7d";
-            if (fkdrValue > 25) fkdrColor = "\u00a74";
+            String fkdrColor = "§7";
+            if (fkdrValue >= 1 && fkdrValue < 3) fkdrColor = "§f";
+            if (fkdrValue >= 3 && fkdrValue < 8) fkdrColor = "§a";
+            if (fkdrValue >= 8 && fkdrValue < 16) fkdrColor = "§6";
+            if (fkdrValue >= 16 && fkdrValue < 25) fkdrColor = "§d";
+            if (fkdrValue > 25) fkdrColor = "§4";
 
             DecimalFormat df = new DecimalFormat("#.##");
             String formattedFkdr = df.format(fkdrValue);
@@ -111,15 +111,15 @@ public class HypixelApi {
                 suffixes.add(tabfkdr);
 
                 if (winstreak > 0) {
-                    String wsColor = "\u00a77";
+                    String wsColor = "§7";
                     if (winstreak >= 20) {
-                        wsColor = "\u00a7d";
+                        wsColor = "§d";
                     } else if (winstreak >= 10) {
-                        wsColor = "\u00a76";
+                        wsColor = "§6";
                     } else if (winstreak >= 5) {
-                        wsColor = "\u00a7a";
+                        wsColor = "§a";
                     } else {
-                        wsColor = "\u00a7f";
+                        wsColor = "§f";
                     }
                     suffixes.add(wsColor + wsStr);
                 }
@@ -142,26 +142,26 @@ public class HypixelApi {
                 if (formattedWinstreak.isEmpty()) {
                     return (
                         Utils.getTabDisplayName(playerName) +
-                        " \u00a7r" +
+                        " §r" +
                         formattedStars +
-                        "\u00a7r\u00a77 |\u00a7r FKDR: " +
+                        "§r§7 |§r FKDR: " +
                         fkdrColor +
                         formattedFkdr +
-                        " \u00a7r\u00a77|\u00a7r [ " +
+                        " §r§7|§r [ " +
                         tagsValue +
                         " ]"
                     );
                 } else {
                     return (
                         Utils.getTabDisplayName(playerName) +
-                        " \u00a7r" +
+                        " §r" +
                         formattedStars +
-                        "\u00a7r\u00a77 |\u00a7r FKDR: " +
+                        "§r§7 |§r FKDR: " +
                         fkdrColor +
                         formattedFkdr +
-                        " \u00a7r\u00a77|\u00a7r WS: " +
+                        " §r§7|§r WS: " +
                         formattedWinstreak +
-                        "\u00a7r [ " +
+                        "§r [ " +
                         tagsValue +
                         " ]"
                     );
@@ -170,24 +170,24 @@ public class HypixelApi {
                 if (formattedWinstreak.isEmpty()) {
                     return (
                         Utils.getTabDisplayName(playerName) +
-                        " \u00a7r" +
+                        " §r" +
                         formattedStars +
-                        "\u00a7r\u00a77 |\u00a7r FKDR: " +
+                        "§r§7 |§r FKDR: " +
                         fkdrColor +
                         formattedFkdr +
-                        "\u00a7r"
+                        "§r"
                     );
                 } else {
                     return (
                         Utils.getTabDisplayName(playerName) +
-                        " \u00a7r" +
+                        " §r" +
                         formattedStars +
-                        "\u00a7r\u00a77 |\u00a7r FKDR: " +
+                        "§r§7 |§r FKDR: " +
                         fkdrColor +
                         formattedFkdr +
-                        " \u00a7r\u00a77|\u00a7r WS: " +
+                        " §r§7|§r WS: " +
                         formattedWinstreak +
-                        "\u00a7r"
+                        "§r"
                     );
                 }
             }

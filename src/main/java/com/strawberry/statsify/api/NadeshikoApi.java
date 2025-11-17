@@ -66,7 +66,7 @@ public class NadeshikoApi {
             uuid = new MojangApi().fetchUUID(playerName);
             if (uuid == "ERROR") {
                 return (
-                    " \u00a7cCould not find " +
+                    " §cCould not find " +
                     playerName +
                     " in the current lobby or on Mojang API."
                 );
@@ -74,7 +74,7 @@ public class NadeshikoApi {
         }
         String stjson = nadeshikoAPI(uuid);
         if (stjson == null || stjson.isEmpty()) {
-            return " \u00a7cFailed to get stats for " + playerName;
+            return " §cFailed to get stats for " + playerName;
         }
 
         JsonObject rootObject = new JsonParser()
@@ -103,17 +103,17 @@ public class NadeshikoApi {
         double fkdr = (finalDeaths == 0)
             ? finalKills
             : (double) finalKills / finalDeaths;
-        String fkdrColor = "\u00a77";
-        if (fkdr >= 1 && fkdr < 3) fkdrColor = "\u00a7f";
-        if (fkdr >= 3 && fkdr < 8) fkdrColor = "\u00a7a";
-        if (fkdr >= 8 && fkdr < 16) fkdrColor = "\u00a76";
-        if (fkdr >= 16 && fkdr < 25) fkdrColor = "\u00a7d";
-        if (fkdr > 25) fkdrColor = "\u00a74";
+        String fkdrColor = "§7";
+        if (fkdr >= 1 && fkdr < 3) fkdrColor = "§f";
+        if (fkdr >= 3 && fkdr < 8) fkdrColor = "§a";
+        if (fkdr >= 8 && fkdr < 16) fkdrColor = "§6";
+        if (fkdr >= 16 && fkdr < 25) fkdrColor = "§d";
+        if (fkdr > 25) fkdrColor = "§4";
         DecimalFormat df = new DecimalFormat("#.##");
         String formattedFkdr = df.format(fkdr);
         return (
             displayedName +
-            " \u00a7r" +
+            " §r" +
             level +
             " FKDR: " +
             fkdrColor +

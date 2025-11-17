@@ -10,19 +10,30 @@ import java.util.regex.Pattern;
 
 public class UrchinApi {
 
-    public String fetchUrchinTags(String playerName, String urchinKey) throws IOException {
-        String tagsURL = "https://urchin.ws/player/" + playerName + "?key=" + urchinKey + "&sources=MANUAL";
+    public String fetchUrchinTags(String playerName, String urchinKey)
+        throws IOException {
+        String tagsURL =
+            "https://urchin.ws/player/" +
+            playerName +
+            "?key=" +
+            urchinKey +
+            "&sources=MANUAL";
         URL tagsAPIURL = new URL(tagsURL);
-        HttpURLConnection statsConnection = (HttpURLConnection) tagsAPIURL.openConnection();
-        statsConnection.setRequestProperty("User-Agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0");
+        HttpURLConnection statsConnection =
+            (HttpURLConnection) tagsAPIURL.openConnection();
+        statsConnection.setRequestProperty(
+            "User-Agent",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0"
+        );
 
         int responseCode = statsConnection.getResponseCode();
         if (responseCode != HttpURLConnection.HTTP_OK) {
             throw new IOException("URCHIN: " + responseCode);
         }
 
-        InputStreamReader inputStream = new InputStreamReader(statsConnection.getInputStream());
+        InputStreamReader inputStream = new InputStreamReader(
+            statsConnection.getInputStream()
+        );
         BufferedReader reader = new BufferedReader(inputStream);
         StringBuilder responseText = new StringBuilder();
         String line;
@@ -35,7 +46,8 @@ public class UrchinApi {
         String response = responseText.toString();
         if (!response.isEmpty()) {
             try {
-                String regex = "\"type\":\"(.*?)\".*?\"reason\":\"(.*?)\".*?\"added_on\":\"(.*?)\"";
+                String regex =
+                    "\"type\":\"(.*?)\".*?\"reason\":\"(.*?)\".*?\"added_on\":\"(.*?)\"";
 
                 Pattern pattern = Pattern.compile(regex);
                 Matcher matcher = pattern.matcher(response);
@@ -43,11 +55,9 @@ public class UrchinApi {
                 if (matcher.find()) {
                     String type = matcher.group(1);
                     String reason = matcher.group(2);
-                    return "\u00a7r" + type + ". \u00a7rReason: \u00a76" + reason;
+                    return "§r" + type + ". §rReason: §6" + reason;
                 }
-            } catch (NumberFormatException ignored) {
-
-            }
+            } catch (NumberFormatException ignored) {}
         }
         return "";
     }

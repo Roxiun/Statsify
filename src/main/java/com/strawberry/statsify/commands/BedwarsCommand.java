@@ -40,7 +40,7 @@ public class BedwarsCommand extends CommandBase {
         if (args.length != 1) {
             sender.addChatMessage(
                 new ChatComponentText(
-                    "\u00a7r[\u00a7bF\u00a7r]\u00a7cInvalid usage!\u00a7r Use /bw \u00a75<username>\u00a7r"
+                    "§r[§bF§r]§cInvalid usage!§r Use /bw §5<username>§r"
                 )
             );
             return;
@@ -60,16 +60,14 @@ public class BedwarsCommand extends CommandBase {
                 String finalStats = stats;
                 Minecraft.getMinecraft().addScheduledTask(() ->
                     Minecraft.getMinecraft().thePlayer.addChatMessage(
-                        new ChatComponentText(
-                            "\u00a7r[\u00a7bF\u00a7r] " + finalStats
-                        )
+                        new ChatComponentText("§r[§bF§r] " + finalStats)
                     )
                 );
             } catch (IOException e) {
                 Minecraft.getMinecraft().addScheduledTask(() ->
                     Minecraft.getMinecraft().thePlayer.addChatMessage(
                         new ChatComponentText(
-                            "\u00a7r[\u00a7bF\u00a7r] \u00a7cFailed to fetch stats for: \u00a7r" +
+                            "§r[§bF§r] §cFailed to fetch stats for: §r" +
                                 username
                         )
                     )

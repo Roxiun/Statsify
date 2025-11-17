@@ -19,34 +19,32 @@ public class StatsifyCommand extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         sender.addChatMessage(
-            new ChatComponentText(
-                "\u00a7r\u00a7b\u00a7lstat\u00a79\u00a7tsi\u00a73\u00a7lfy\u00a7r"
-            )
+            new ChatComponentText("§r§b§lstat§9§tsi§3§lfy§r")
         );
         sender.addChatMessage(
             new ChatComponentText(
-                "\u00a7r\u00a7boriginal made by\u00a7e melissalmao\u00a7r updated by\u00a7e roxiun\u00a7r"
+                "§r§boriginal made by§e melissalmao§r updated by§e roxiun§r"
             )
         );
         sender.addChatMessage(new ChatComponentText(""));
         sender.addChatMessage(
             new ChatComponentText(
-                "\u00a7r\u00a73/bw <username>:\u00a7b Manually check bedwars stats of a player.\u00a7r"
+                "§r§3/bw <username>:§b Manually check bedwars stats of a player.§r"
             )
         );
         sender.addChatMessage(
             new ChatComponentText(
-                "\u00a7r\u00a73/denick <finals | beds> <number>:\u00a7b Manually denick a player based on finals or beds.\u00a7r"
+                "§r§3/denick <finals | beds> <number>:§b Manually denick a player based on finals or beds.§r"
             )
         );
         sender.addChatMessage(
             new ChatComponentText(
-                "\u00a7r\u00a73/cleartabcache:\u00a7b Clear stats cache of players if you're having issues.\u00a7r"
+                "§r§3/cleartabcache:§b Clear stats cache of players if you're having issues.§r"
             )
         );
         sender.addChatMessage(
             new ChatComponentText(
-                "\u00a7r\u00a73/who:\u00a7b Check and print the stats of the players in your lobby.\u00a7r"
+                "§r§3/who:§b Check and print the stats of the players in your lobby.§r"
             )
         );
         sender.addChatMessage(new ChatComponentText(""));

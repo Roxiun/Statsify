@@ -20,8 +20,15 @@ public class NickUtils {
 
         Map<String, UUID> playerToUuid = new HashMap<>();
         for (NetworkPlayerInfo networkPlayerInfo : mc.thePlayer.sendQueue.getPlayerInfoMap()) {
-            if (networkPlayerInfo != null && networkPlayerInfo.getGameProfile() != null && networkPlayerInfo.getGameProfile().getId() != null) {
-                playerToUuid.put(networkPlayerInfo.getGameProfile().getName(), networkPlayerInfo.getGameProfile().getId());
+            if (
+                networkPlayerInfo != null &&
+                networkPlayerInfo.getGameProfile() != null &&
+                networkPlayerInfo.getGameProfile().getId() != null
+            ) {
+                playerToUuid.put(
+                    networkPlayerInfo.getGameProfile().getName(),
+                    networkPlayerInfo.getGameProfile().getId()
+                );
             }
         }
 
@@ -32,7 +39,7 @@ public class NickUtils {
                     if (nickedPlayers.add(player)) {
                         mc.thePlayer.addChatMessage(
                             new ChatComponentText(
-                                "\u00a7r[\u00a7bF\u00a7r] \u00a7c" + player + " is nicked."
+                                "§r[§bF§r] §c" + player + " is nicked."
                             )
                         );
                     }

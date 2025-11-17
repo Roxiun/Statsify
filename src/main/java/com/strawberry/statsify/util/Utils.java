@@ -35,191 +35,191 @@ public class Utils {
     }
 
     public static String formatWinstreak(String text) {
-        String color = "\u00a7r";
+        String color = "§r";
         int Winstreak = Integer.parseInt(text);
         if (Winstreak >= 5 && Winstreak < 10) {
-            color = "\u00a7b";
+            color = "§b";
         }
         if (Winstreak >= 10 && Winstreak < 20) {
-            color = "\u00a76";
+            color = "§6";
         }
         if (Winstreak >= 20) {
-            color = "\u00a74";
+            color = "§4";
         }
         return color + text;
     }
 
     public static String formatStars(String text) {
-        String color = "\u00a77";
+        String color = "§7";
 
         int Stars = Integer.parseInt(text);
         if (Stars < 100) {
-            color = "\u00a77";
+            color = "§7";
             return color + text + "\u272b";
         }
 
         if (Stars >= 100 && Stars < 200) {
-            color = "\u00A7f";
+            color = "§f";
             return color + text + "\u272b";
         }
         if (Stars >= 200 && Stars < 300) {
-            color = "\u00a76";
+            color = "§6";
             return color + text + "\u272b";
         }
         if (Stars >= 300 && Stars < 400) {
-            color = "\u00a7b";
+            color = "§b";
             return color + text + "\u272b";
         }
         if (Stars >= 400 && Stars < 500) {
-            color = "\u00a72";
+            color = "§2";
             return color + text + "\u272b";
         }
         if (Stars >= 500 && Stars < 600) {
-            color = "\u00a73";
+            color = "§3";
             return color + text + "\u272b";
         }
         if (Stars >= 600 && Stars < 700) {
-            color = "\u00a74";
+            color = "§4";
             return color + text + "\u272b";
         }
         if (Stars >= 700 && Stars < 800) {
-            color = "\u00a7d";
+            color = "§d";
             return color + text + "\u272b";
         }
         if (Stars >= 800 && Stars < 900) {
-            color = "\u00a79";
+            color = "§9";
             return color + text + "\u272b";
         }
         if (Stars >= 900 && Stars < 1000) {
-            color = "\u00a75";
+            color = "§5";
             return color + text + "\u272b";
         }
         if (Stars >= 1000 && Stars < 1100) {
             String[] digit = text.split("");
             return (
-                "\u00a76" +
+                "§6" +
                 digit[0] +
-                "\u00a7e" +
+                "§e" +
                 digit[1] +
-                "\u00a7a" +
+                "§a" +
                 digit[2] +
-                "\u00a7b" +
+                "§b" +
                 digit[3] +
-                "\u00a7d" +
+                "§d" +
                 "\u272a"
             );
         }
         if (Stars >= 1100 && Stars < 1200) {
             String[] digit = text.split("");
             return (
-                "\u00a7f" + digit[0] + digit[1] + digit[2] + digit[3] + "\u272a"
+                "§f" + digit[0] + digit[1] + digit[2] + digit[3] + "\u272a"
             );
         }
         if (Stars >= 1200 && Stars < 1300) {
             String[] digit = text.split("");
             return (
-                "\u00a7e" +
+                "§e" +
                 digit[0] +
                 digit[1] +
                 digit[2] +
                 digit[3] +
-                "\u00a76" +
+                "§6" +
                 "\u272a"
             );
         }
         if (Stars >= 1300 && Stars < 1400) {
             String[] digit = text.split("");
             return (
-                "\u00a7b" +
+                "§b" +
                 digit[0] +
                 digit[1] +
                 digit[2] +
                 digit[3] +
-                "\u00a73" +
+                "§3" +
                 "\u272a"
             );
         }
         if (Stars >= 1400 && Stars < 1500) {
             String[] digit = text.split("");
             return (
-                "\u00a7a" +
+                "§a" +
                 digit[0] +
                 digit[1] +
                 digit[2] +
                 digit[3] +
-                "\u00a72" +
+                "§2" +
                 "\u272a"
             );
         }
         if (Stars >= 1500 && Stars < 1600) {
             String[] digit = text.split("");
             return (
-                "\u00a73" +
+                "§3" +
                 digit[0] +
                 digit[1] +
                 digit[2] +
                 digit[3] +
-                "\u00a79" +
+                "§9" +
                 "\u272a"
             );
         }
         if (Stars >= 1600 && Stars < 1700) {
             String[] digit = text.split("");
             return (
-                "\u00a7c" +
+                "§c" +
                 digit[0] +
                 digit[1] +
                 digit[2] +
                 digit[3] +
-                "\u00a74" +
+                "§4" +
                 "\u272a"
             );
         }
         if (Stars >= 1700 && Stars < 1800) {
             String[] digit = text.split("");
             return (
-                "\u00a7d" +
+                "§d" +
                 digit[0] +
                 digit[1] +
                 digit[2] +
                 digit[3] +
-                "\u00a75" +
+                "§5" +
                 "\u272a"
             );
         }
         if (Stars >= 1800 && Stars < 1900) {
             String[] digit = text.split("");
             return (
-                "\u00a79" +
+                "§9" +
                 digit[0] +
                 digit[1] +
                 digit[2] +
                 digit[3] +
-                "\u00a71" +
+                "§1" +
                 "\u272a"
             );
         }
         if (Stars >= 1900 && Stars < 2000) {
             String[] digit = text.split("");
             return (
-                "\u00a75" +
+                "§5" +
                 digit[0] +
                 digit[1] +
                 digit[2] +
                 digit[3] +
-                "\u00a78" +
+                "§8" +
                 "\u272a"
             );
         }
         if (Stars >= 2000 && Stars < 2100) {
             String[] digit = text.split("");
             return (
-                "\u00a77" +
+                "§7" +
                 digit[0] +
-                "\u00a7f" +
+                "§f" +
                 digit[1] +
                 digit[2] +
-                "\u00a77" +
+                "§7" +
                 digit[3] +
                 "\u269d"
             );
@@ -227,12 +227,12 @@ public class Utils {
         if (Stars >= 2100 && Stars < 2200) {
             String[] digit = text.split("");
             return (
-                "\u00a7f" +
+                "§f" +
                 digit[0] +
-                "\u00a7e" +
+                "§e" +
                 digit[1] +
                 digit[2] +
-                "\u00a76" +
+                "§6" +
                 digit[3] +
                 "\u269d"
             );
@@ -240,40 +240,40 @@ public class Utils {
         if (Stars >= 2200 && Stars < 2300) {
             String[] digit = text.split("");
             return (
-                "\u00a76" +
+                "§6" +
                 digit[0] +
-                "\u00a7f" +
+                "§f" +
                 digit[1] +
                 digit[2] +
-                "\u00a7b" +
+                "§b" +
                 digit[3] +
-                "\u00a73" +
+                "§3" +
                 "\u269d"
             );
         }
         if (Stars >= 2300 && Stars < 2400) {
             String[] digit = text.split("");
             return (
-                "\u00a75" +
+                "§5" +
                 digit[0] +
-                "\u00a7d" +
+                "§d" +
                 digit[1] +
                 digit[2] +
-                "\u00a76" +
+                "§6" +
                 digit[3] +
-                "\u00a7e" +
+                "§e" +
                 "\u269d"
             );
         }
         if (Stars >= 2400 && Stars < 2500) {
             String[] digit = text.split("");
             return (
-                "\u00a7b" +
+                "§b" +
                 digit[0] +
-                "\u00a7f" +
+                "§f" +
                 digit[1] +
                 digit[2] +
-                "\u00a77" +
+                "§7" +
                 digit[3] +
                 "\u269d"
             );
@@ -281,12 +281,12 @@ public class Utils {
         if (Stars >= 2500 && Stars < 2600) {
             String[] digit = text.split("");
             return (
-                "\u00a7f" +
+                "§f" +
                 digit[0] +
-                "\u00a7a" +
+                "§a" +
                 digit[1] +
                 digit[2] +
-                "\u00a72" +
+                "§2" +
                 digit[3] +
                 "\u269d"
             );
@@ -294,12 +294,12 @@ public class Utils {
         if (Stars >= 2600 && Stars < 2700) {
             String[] digit = text.split("");
             return (
-                "\u00a74" +
+                "§4" +
                 digit[0] +
-                "\u00a7c" +
+                "§c" +
                 digit[1] +
                 digit[2] +
-                "\u00a7d" +
+                "§d" +
                 digit[3] +
                 "\u269d"
             );
@@ -307,12 +307,12 @@ public class Utils {
         if (Stars >= 2700 && Stars < 2800) {
             String[] digit = text.split("");
             return (
-                "\u00a7e" +
+                "§e" +
                 digit[0] +
-                "\u00a7f" +
+                "§f" +
                 digit[1] +
                 digit[2] +
-                "\u00a78" +
+                "§8" +
                 digit[3] +
                 "\u269d"
             );
@@ -320,12 +320,12 @@ public class Utils {
         if (Stars >= 2800 && Stars < 2900) {
             String[] digit = text.split("");
             return (
-                "\u00a7a" +
+                "§a" +
                 digit[0] +
-                "\u00a72" +
+                "§2" +
                 digit[1] +
                 digit[2] +
-                "\u00a76" +
+                "§6" +
                 digit[3] +
                 "\u269d"
             );
@@ -333,12 +333,12 @@ public class Utils {
         if (Stars >= 2900 && Stars < 3000) {
             String[] digit = text.split("");
             return (
-                "\u00a7b" +
+                "§b" +
                 digit[0] +
-                "\u00a73" +
+                "§3" +
                 digit[1] +
                 digit[2] +
-                "\u00a79" +
+                "§9" +
                 digit[3] +
                 "\u269d"
             );
@@ -346,12 +346,12 @@ public class Utils {
         if (Stars >= 3000) {
             String[] digit = text.split("");
             return (
-                "\u00a7e" +
+                "§e" +
                 digit[0] +
-                "\u00a76" +
+                "§6" +
                 digit[1] +
                 digit[2] +
-                "\u00a7c" +
+                "§c" +
                 digit[3] +
                 "\u269d"
             );
@@ -361,9 +361,9 @@ public class Utils {
 
     public static String formatRank(String rank) {
         return rank
-            .replace("[VIP", "\u00a7a[VIP")
-            .replace("[MVP+", "\u00a7b[MVP+")
-            .replace("[MVP++", "\u00a76[MVP++");
+            .replace("[VIP", "§a[VIP")
+            .replace("[MVP+", "§b[MVP+")
+            .replace("[MVP++", "§6[MVP++");
     }
 
     public static String parseUsername(String str) {

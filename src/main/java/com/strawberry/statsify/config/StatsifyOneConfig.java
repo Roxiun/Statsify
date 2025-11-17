@@ -49,7 +49,11 @@ public class StatsifyOneConfig extends Config {
 
     @Dropdown(
         name = "Tab Format",
-        options = { "[Star] Name • FKDR", "Star • Name • FKDR", "Name • FKDR" }
+        options = {
+            "[Star] Name • FKDR • WS",
+            "Star • Name • FKDR • WS",
+            "Name • FKDR • WS",
+        }
     )
     public int tabFormat = 0;
 

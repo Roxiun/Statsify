@@ -104,15 +104,12 @@ public class Statsify {
                 try {
                     String stats = planckeApi.checkDuels(username);
                     mc.thePlayer.addChatMessage(
-                        new ChatComponentText(
-                            "\u00a7r[\u00a7bF\u00a7r] " + stats
-                        )
+                        new ChatComponentText("§r[§bF§r] " + stats)
                     );
                 } catch (IOException e) {
                     mc.thePlayer.addChatMessage(
                         new ChatComponentText(
-                            "\u00a7r[\u00a7bF\u00a7r] \u00a7cFailed to get stats for " +
-                                username
+                            "§r[§bF§r] §cFailed to get stats for " + username
                         )
                     );
                 }
@@ -191,9 +188,9 @@ public class Statsify {
                     default:
                         newDisplayName =
                             team +
-                            "\u00a77[" +
+                            "§7[" +
                             suffixv.get(0) +
-                            "\u00a77] " +
+                            "§7] " +
                             teamColor +
                             name +
                             "\u30fb" +
@@ -202,7 +199,7 @@ public class Statsify {
                 }
 
                 if (suffixv.size() >= 3) {
-                    newDisplayName += " \u00a77| " + suffixv.get(2);
+                    newDisplayName += "§7\u30fb" + suffixv.get(2);
                 }
 
                 if (!currentDisplayName.equals(newDisplayName)) {
@@ -210,9 +207,7 @@ public class Statsify {
                         new ChatComponentText(newDisplayName)
                     );
                 }
-            } else if (
-                isNicked && !currentDisplayName.contains("\u00a7c[NICK]")
-            ) {
+            } else if (isNicked && !currentDisplayName.contains("§c[NICK]")) {
                 // Player is nicked, does not have stats
                 String[] tabData = Utils.getTabDisplayName2(playerName);
                 if (tabData != null && tabData.length >= 3) {
@@ -224,14 +219,12 @@ public class Statsify {
                         : "";
                     playerInfo.setDisplayName(
                         new ChatComponentText(
-                            team + "\u00a7c[NICK] " + teamColor + name + suffix
+                            team + "§c[NICK] " + teamColor + name + suffix
                         )
                     );
                 } else {
                     playerInfo.setDisplayName(
-                        new ChatComponentText(
-                            "\u00a7c[NICK] " + currentDisplayName
-                        )
+                        new ChatComponentText("§c[NICK] " + currentDisplayName)
                     );
                 }
             }
@@ -246,26 +239,17 @@ public class Statsify {
                 try {
                     String tags = urchinApi
                         .fetchUrchinTags(playerName, config.urchinKey)
-                        .replace("sniper", "\u00a74\u00a7lSniper")
-                        .replace(
-                            "blatant_cheater",
-                            "\u00a74\u00a7lBlatant Cheater"
-                        )
-                        .replace(
-                            "closet_cheater",
-                            "\u00a7e\u00a7lCloset Cheater"
-                        )
-                        .replace(
-                            "confirmed_cheater",
-                            "\u00a74\u00a7lConfirmed Cheater"
-                        );
+                        .replace("sniper", "§4§lSniper")
+                        .replace("blatant_cheater", "§4§lBlatant Cheater")
+                        .replace("closet_cheater", "§e§lCloset Cheater")
+                        .replace("confirmed_cheater", "§4§lConfirmed Cheater");
                     if (!tags.isEmpty()) {
                         mc.addScheduledTask(() ->
                             mc.thePlayer.addChatMessage(
                                 new ChatComponentText(
-                                    "\u00a7r[\u00a7bF\u00a7r] \u00a7c\u26a0 \u00a7r" +
+                                    "§r[§bF§r] §c\u26a0 §r" +
                                         Utils.getTabDisplayName(playerName) +
-                                        " \u00a7ris \u00a7ctagged\u00a7r for: " +
+                                        " §ris §ctagged§r for: " +
                                         tags
                                 )
                             )
@@ -275,7 +259,7 @@ public class Statsify {
                     mc.addScheduledTask(() ->
                         mc.thePlayer.addChatMessage(
                             new ChatComponentText(
-                                "\u00a7r[\u00a7bF\u00a7r] Failed to fetch tags for: " +
+                                "§r[§bF§r] Failed to fetch tags for: " +
                                     playerName +
                                     " | " +
                                     e.getMessage()
@@ -307,9 +291,7 @@ public class Statsify {
                     if (!stats.isEmpty() && config.printStats) {
                         mc.addScheduledTask(() ->
                             mc.thePlayer.addChatMessage(
-                                new ChatComponentText(
-                                    "\u00a7r[\u00a7bF\u00a7r] " + stats
-                                )
+                                new ChatComponentText("§r[§bF§r] " + stats)
                             )
                         );
                     }
@@ -317,7 +299,7 @@ public class Statsify {
                     mc.addScheduledTask(() ->
                         mc.thePlayer.addChatMessage(
                             new ChatComponentText(
-                                "\u00a7r[\u00a7bF\u00a7r] Failed to fetch stats for: " +
+                                "§r[§bF§r] Failed to fetch stats for: " +
                                     playerName +
                                     " | [UpstreamCSR] "
                             )
@@ -335,7 +317,7 @@ public class Statsify {
                     mc.addScheduledTask(() ->
                         mc.thePlayer.addChatMessage(
                             new ChatComponentText(
-                                "\u00a7r[\u00a7bF\u00a7r]\u00a7a Checks completed."
+                                "§r[§bF§r]§a Checks completed."
                             )
                         )
                     );
@@ -343,7 +325,7 @@ public class Statsify {
                     mc.addScheduledTask(() ->
                         mc.thePlayer.addChatMessage(
                             new ChatComponentText(
-                                "\u00a7r[\u00a7bF\u00a7r]\u00a7c Timeout waiting for completion."
+                                "§r[§bF§r]§c Timeout waiting for completion."
                             )
                         )
                     );
@@ -352,8 +334,7 @@ public class Statsify {
                 mc.addScheduledTask(() ->
                     mc.thePlayer.addChatMessage(
                         new ChatComponentText(
-                            "\u00a7r[\u00a7bF\u00a7r] \u00a7cError while waiting: " +
-                                e.getMessage()
+                            "§r[§bF§r] §cError while waiting: " + e.getMessage()
                         )
                     )
                 );

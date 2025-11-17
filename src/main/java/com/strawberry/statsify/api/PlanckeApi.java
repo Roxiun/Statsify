@@ -1,7 +1,6 @@
 package com.strawberry.statsify.api;
 
 import com.strawberry.statsify.util.Utils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,11 +16,14 @@ public class PlanckeApi {
         String url = "https://plancke.io/hypixel/player/stats/" + playerName;
 
         URL urlObject = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
+        HttpURLConnection connection =
+            (HttpURLConnection) urlObject.openConnection();
         connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 
         InputStream inputStream = connection.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        BufferedReader reader = new BufferedReader(
+            new InputStreamReader(inputStream)
+        );
         StringBuilder responseText = new StringBuilder();
         String line;
 
@@ -33,30 +35,54 @@ public class PlanckeApi {
         String response = responseText.toString();
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
-            return playerName + " is \u00a7cnicked\u00a7r";
+            return playerName + " is §cnicked§r";
         }
 
-        Pattern namePattern = Pattern.compile("(?<=content=\"Plancke\" /><meta property=\"og:locale\" content=\"en_US\" /><meta property=\"og:description\" content=\").+?(?=\")");
+        Pattern namePattern = Pattern.compile(
+            "(?<=content=\"Plancke\" /><meta property=\"og:locale\" content=\"en_US\" /><meta property=\"og:description\" content=\").+?(?=\")"
+        );
         Matcher nameMatcher = namePattern.matcher(response);
-        String displayedName = nameMatcher.find() ? nameMatcher.group() : "Unknown";
+        String displayedName = nameMatcher.find()
+            ? nameMatcher.group()
+            : "Unknown";
 
         String playerrank = ""; // empty if no rank
         String trimmedName = displayedName.trim();
 
         String[] parts = trimmedName.split("\\s+", 2);
-        if (parts.length > 0 && parts[0].startsWith("[") && parts[0].endsWith("]")) {
+        if (
+            parts.length > 0 &&
+            parts[0].startsWith("[") &&
+            parts[0].endsWith("]")
+        ) {
             String unformattedRank = parts[0];
             playerrank = Utils.formatRank(unformattedRank) + " ";
         }
         // Insane Regex Wow
-        String regex = "<tr><td>Classic 1v1</td><td>([\\d,]+)</td><td>([\\d,]+)</td><td>([\\d.,]+)</td><td>([\\d,]+)</td><td>([\\d,]+)</td><td>([\\d.,]+)</td><td>([\\d.,]+)</td><td>([\\d.,]+)</td></tr>";
+        String regex =
+            "<tr><td>Classic 1v1</td><td>([\\d,]+)</td><td>([\\d,]+)</td><td>([\\d.,]+)</td><td>([\\d,]+)</td><td>([\\d,]+)</td><td>([\\d.,]+)</td><td>([\\d.,]+)</td><td>([\\d.,]+)</td></tr>";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(response);
         if (matcher.find()) {
-            String ClassicStats = "\n\u00a7aKills:\u00a7r " + matcher.group(1) + " \u00a7cDeaths:\u00a7r " + matcher.group(2) + " (\u00a7d" + matcher.group(3) + "\u00a7r) " + "\n" + "\u00a7bW:\u00a7r " + matcher.group(4) + " \u00a7cL: \u00a7r" + matcher.group(5) + " (\u00a7d" + matcher.group(6) + "\u00a7r)";
-            return playerrank + playerName + "\u00a7r (Classic 1v1)" + ClassicStats;
+            String ClassicStats =
+                "\n§aKills:§r " +
+                matcher.group(1) +
+                " §cDeaths:§r " +
+                matcher.group(2) +
+                " (§d" +
+                matcher.group(3) +
+                "§r) " +
+                "\n" +
+                "§bW:§r " +
+                matcher.group(4) +
+                " §cL: §r" +
+                matcher.group(5) +
+                " (§d" +
+                matcher.group(6) +
+                "§r)";
+            return playerrank + playerName + "§r (Classic 1v1)" + ClassicStats;
         } else {
-            return playerrank + playerName + " \u00a7chas no Classic Duels stats.\u00a7r";
+            return playerrank + playerName + " §chas no Classic Duels stats.§r";
         }
     }
 }
