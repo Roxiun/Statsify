@@ -1,6 +1,7 @@
 package com.strawberry.statsify.config;
 
 import cc.polyfrost.oneconfig.config.Config;
+import cc.polyfrost.oneconfig.config.annotations.Button;
 import cc.polyfrost.oneconfig.config.annotations.Dropdown;
 import cc.polyfrost.oneconfig.config.annotations.Info;
 import cc.polyfrost.oneconfig.config.annotations.Number;
@@ -11,6 +12,7 @@ import cc.polyfrost.oneconfig.config.data.InfoType;
 import cc.polyfrost.oneconfig.config.data.Mod;
 import cc.polyfrost.oneconfig.config.data.ModType;
 import cc.polyfrost.oneconfig.config.data.OptionSize;
+import cc.polyfrost.oneconfig.utils.NetworkUtils;
 import com.strawberry.statsify.Statsify;
 
 public class StatsifyOneConfig extends Config {
@@ -70,6 +72,18 @@ public class StatsifyOneConfig extends Config {
         category = "Number Denicker"
     )
     public static boolean ignored2; // Useless. Java limitations with @annotation.
+
+    @Button(
+        name = "Run /api view on the bot to get your key",
+        text = "Discord Bot",
+        size = OptionSize.DUAL,
+        category = "Number Denicker"
+    )
+    Runnable runnable = () -> {
+        NetworkUtils.browseLink(
+            "https://discord.com/oauth2/authorize?client_id=1244205279697174539"
+        );
+    };
 
     @Switch(name = "Enable Number Denicker", category = "Number Denicker")
     public boolean numberDenicker = false;

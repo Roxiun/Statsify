@@ -150,7 +150,7 @@ public class NumberDenicker {
                     config.auroraApiKey
                 );
 
-                if (!player.fuzzy_finalsChecked && type == "finals") {
+                if (!player.fuzzy_finalsChecked && type.equals("finals")) {
                     player.fuzzy_finalsChecked = true;
                     String fuzzy_players = response.data
                         .stream()
@@ -174,7 +174,7 @@ public class NumberDenicker {
                     );
                 }
 
-                if (!player.fuzzy_bedsChecked && type == "beds") {
+                if (!player.fuzzy_bedsChecked && type.equals("beds")) {
                     player.fuzzy_bedsChecked = true;
                     String fuzzy_players = response.data
                         .stream()
@@ -196,6 +196,63 @@ public class NumberDenicker {
                             )
                         )
                     );
+                }
+
+                // fuzzy checking!~
+                if (response != null && response.success) {
+                    List<String> fuzzy_matches = response.data
+                        .stream()
+                        .filter(p -> p.distance <= range)
+                        .map(p -> p.name)
+                        .collect(Collectors.toList());
+                    // no matches :(
+                    if (fuzzy_matches.isEmpty()) {
+                        mc.addScheduledTask(() ->
+                            mc.thePlayer.addChatMessage(
+                                new ChatComponentText(
+                                    "§4[ND] §cNo players found in range found for " +
+                                        number +
+                                        type
+                                )
+                            )
+                        );
+                        if (type.equals("finals")) player.fuzzy_finalsChecked =
+                            true;
+                        if (type.equals("beds")) player.fuzzy_bedsChecked =
+                            true;
+                        return;
+                    }
+                    if (player.fuzzy_potentials.isEmpty()) {
+                        if (player.fuzzy_bedsChecked && type.equals("finals")) {
+                            player.setFuzzyPotentials(fuzzy_matches);
+                        } else if (
+                            player.finalsChecked && type.equals("beds")
+                        ) {
+                            player.setFuzzyPotentials(fuzzy_matches);
+                        }
+                    } else {
+                        player.fuzzy_potentials.retainAll(fuzzy_matches);
+                    }
+
+                    if (type.equals("finals")) player.fuzzy_finalsChecked =
+                        true;
+                    if (type.equals("beds")) player.fuzzy_bedsChecked = true;
+
+                    if (
+                        player.fuzzy_finalsChecked && player.fuzzy_bedsChecked
+                    ) {
+                        mc.addScheduledTask(() ->
+                            mc.thePlayer.addChatMessage(
+                                new ChatComponentText(
+                                    "§4[ND] §aFound matching finals and beds for: " +
+                                        String.join(
+                                            ", ",
+                                            player.fuzzy_potentials
+                                        )
+                                )
+                            )
+                        );
+                    }
                 }
 
                 if (response != null && response.success) {
@@ -300,11 +357,16 @@ public class NumberDenicker {
         boolean finalsChecked = false;
         boolean bedsChecked = false;
 
+        List<String> fuzzy_potentials = new ArrayList<>();
         boolean fuzzy_finalsChecked = false;
         boolean fuzzy_bedsChecked = false;
 
         void setPotentials(List<String> potentials) {
             this.potentials = potentials;
+        }
+
+        void setFuzzyPotentials(List<String> fuzzy_potentials) {
+            this.fuzzy_potentials = fuzzy_potentials;
         }
     }
 }
