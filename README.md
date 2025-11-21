@@ -18,6 +18,8 @@ High functional & API keyless Stats (overlay-like) Forge mod, that utilizes Scra
 
 - Stars & FKDR on Tablist like Lilith
 
+- See other players' ping (Polsu API)
+
 - Urchin API support for Sniper & Cheater tags
 
 - Check any player's bedwars stats with `/bw`
@@ -83,6 +85,8 @@ To check an **individual**'s bedwars stats type `/bw <username>`
 To display **help command** type `/st`
 
 To use the **number denicker** add the Aurora API key, you can get a key from [here](https://discord.com/oauth2/authorize?client_id=1244205279697174539)
+
+To show *other player's pings* add the Polsu API key, which you can get from [here](https://polsu.xyz/api/apikey)
 
 Stats checking for classic duels is automatic, and not toggleable. Does not have any settings.
 
