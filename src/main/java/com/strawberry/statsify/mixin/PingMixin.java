@@ -3,6 +3,7 @@ package com.strawberry.statsify.mixin;
 import cc.polyfrost.oneconfig.utils.hypixel.HypixelUtils;
 import com.strawberry.statsify.Statsify;
 import com.strawberry.statsify.api.PolsuApi;
+import com.strawberry.statsify.api.UrchinApi;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -16,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class PingMixin {
 
     private static final PolsuApi polsuApi = new PolsuApi();
+    private static final UrchinApi urchinApi = new UrchinApi();
     private static final ExecutorService EXECUTOR =
         Executors.newFixedThreadPool(3);
 
@@ -26,7 +28,11 @@ public class PingMixin {
     private void onGetResponseTime(CallbackInfoReturnable<Integer> cir) {
         int original = this.responseTime;
 
-        if (!Statsify.config.polsuPing || !HypixelUtils.INSTANCE.isHypixel()) {
+        // pingProvider: 0 = None, 1 = Polsu, 2 = Urchin
+        if (
+            Statsify.config.pingProvider == 0 ||
+            !HypixelUtils.INSTANCE.isHypixel()
+        ) {
             cir.setReturnValue(original);
             return;
         }
@@ -40,26 +46,44 @@ public class PingMixin {
             .getId()
             .toString();
 
-        // Use cached ping if exists
-        int cached = polsuApi.getCachedPing(uuid);
-        if (cached != -1) {
-            cir.setReturnValue(cached);
-            return;
-        }
-
-        // Return vanilla ping while waiting for async fetch
-        cir.setReturnValue(original);
-
-        // Prevent duplicate fetch tasks
-        if (!polsuApi.tryStartFetch(uuid)) return; // fetch already in progress
-
-        EXECUTOR.submit(() -> {
-            try {
-                int ping = polsuApi.fetchPingBlocking(uuid);
-                // (cache updated inside fetch)
-            } finally {
-                polsuApi.finishFetch(uuid);
+        if (Statsify.config.pingProvider == 1) {
+            // Polsu
+            int cached = polsuApi.getCachedPing(uuid);
+            if (cached != -1) {
+                cir.setReturnValue(cached);
+                return;
             }
-        });
+
+            cir.setReturnValue(original);
+
+            if (!polsuApi.tryStartFetch(uuid)) return;
+
+            EXECUTOR.submit(() -> {
+                try {
+                    polsuApi.fetchPingBlocking(uuid);
+                } finally {
+                    polsuApi.finishFetch(uuid);
+                }
+            });
+        } else if (Statsify.config.pingProvider == 2) {
+            // Urchin
+            int cached = urchinApi.getCachedPing(uuid);
+            if (cached != -1) {
+                cir.setReturnValue(cached);
+                return;
+            }
+
+            cir.setReturnValue(original);
+
+            if (!urchinApi.tryStartFetch(uuid)) return;
+
+            EXECUTOR.submit(() -> {
+                try {
+                    urchinApi.fetchPingBlocking(uuid);
+                } finally {
+                    urchinApi.finishFetch(uuid);
+                }
+            });
+        }
     }
 }

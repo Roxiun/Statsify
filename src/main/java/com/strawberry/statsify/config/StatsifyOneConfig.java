@@ -37,17 +37,28 @@ public class StatsifyOneConfig extends Config {
     )
     public String urchinKey = "";
 
-    @Switch(name = "Enable Polsu Ping", category = "Polsu")
-    public boolean polsuPing = false;
+    @Dropdown(
+        name = "Ping Provider",
+        category = "Ping",
+        options = { "None", "Polsu", "Urchin" }
+    )
+    public int pingProvider = 2;
 
-    @Button(name = "", text = "API Key", category = "Polsu")
+    @Info(
+        text = "Polsu requires an API key to be able to be used.",
+        type = InfoType.INFO,
+        category = "Ping"
+    )
+    public static boolean ignored3;
+
+    @Button(name = "Polsu API Key", text = "Get Key", category = "Ping")
     Runnable polsuLinkButton = () -> {
         NetworkUtils.browseLink("https://polsu.xyz/api/apikey");
     };
 
     @Text(
         name = "Polsu API Key",
-        category = "Polsu",
+        category = "Ping",
         secure = true,
         multiline = false
     )
