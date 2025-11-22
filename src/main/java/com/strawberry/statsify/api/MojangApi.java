@@ -1,119 +1,91 @@
 package com.strawberry.statsify.api;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import java.io.IOException;
-import java.util.Base64;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.network.NetworkPlayerInfo;
 
 public class MojangApi {
 
-    private final OkHttpClient client;
-    private final Gson gson;
-    private static final String UUID_API_URL =
-        "https://api.mojang.com/users/profiles/minecraft/";
-    private static final String SESSION_API_URL =
-        "https://sessionserver.mojang.com/session/minecraft/profile/";
-    private static final String MINETOOLS_API_URL =
-        "https://api.minetools.eu/uuid/";
+    public String fetchUUID(String username) {
+        try {
+            String urlString =
+                "https://api.minecraftservices.com/minecraft/profile/lookup/name/" +
+                username;
+            HttpURLConnection connection = (HttpURLConnection) new URL(
+                urlString
+            ).openConnection();
+            connection.setRequestMethod("GET");
 
-    public MojangApi(OkHttpClient client, Gson gson) {
-        this.client = client;
-        this.gson = gson;
-    }
+            int responseCode = connection.getResponseCode();
+            if (responseCode == 200) {
+                BufferedReader in = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream())
+                );
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = in.readLine()) != null) response.append(line);
+                in.close();
+                String uuid = extractUUID(response.toString());
+                return uuid != null ? uuid : "ERROR";
+            }
 
-    public String getUUID(String username) throws IOException {
-        Request request = new Request.Builder()
-            .url(UUID_API_URL + username)
-            .build();
+            if (responseCode == 404) return "ERROR";
 
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                ResponseBody body = response.body();
-                if (body != null) {
-                    JsonObject jsonObject = gson.fromJson(
-                        body.string(),
-                        JsonObject.class
-                    );
-                    if (jsonObject != null && jsonObject.has("id")) {
-                        return jsonObject.get("id").getAsString();
-                    }
-                }
-            } else if (response.code() == 429) {
+            if (responseCode == 429) {
                 // Rate limited, fallback to minetools
-                return getUUIDFromMinetools(username);
-            }
-            throw new IOException(
-                "Failed to get UUID for " +
-                    username +
-                    ". Response code: " +
-                    response.code()
-            );
-        }
-    }
+                urlString = "https://api.minetools.eu/uuid/" + username;
+                connection = (HttpURLConnection) new URL(
+                    urlString
+                ).openConnection();
+                connection.setRequestMethod("GET");
 
-    private String getUUIDFromMinetools(String username) throws IOException {
-        Request request = new Request.Builder()
-            .url(MINETOOLS_API_URL + username)
-            .build();
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                ResponseBody body = response.body();
-                if (body != null) {
-                    JsonObject jsonObject = gson.fromJson(
-                        body.string(),
-                        JsonObject.class
-                    );
-                    if (
-                        jsonObject != null &&
-                        jsonObject.has("id") &&
-                        !jsonObject.get("id").isJsonNull()
-                    ) {
-                        return jsonObject.get("id").getAsString();
-                    }
+                BufferedReader in = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream())
+                );
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = in.readLine()) != null) response.append(line);
+                in.close();
+
+                if (
+                    response.toString().contains("\"id\": null")
+                ) return "ERROR";
+                String[] parts = response.toString().split("\"id\":\"");
+                if (parts.length > 1) {
+                    return parts[1].split("\"")[0];
+                } else {
+                    return "ERROR";
                 }
             }
-            throw new IOException(
-                "Failed to get UUID for " +
-                    username +
-                    " from Minetools. Response code: " +
-                    response.code()
-            );
-        }
+        } catch (Exception ignored) {}
+
+        return "ERROR";
     }
 
-    public String getSkinInfo(String uuid) throws IOException {
-        Request request = new Request.Builder()
-            .url(SESSION_API_URL + uuid)
-            .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                return null; // Or throw exception
-            }
-            ResponseBody body = response.body();
-            if (body == null) {
-                return null;
-            }
-            JsonObject jsonObject = gson.fromJson(
-                body.string(),
-                JsonObject.class
-            );
-            if (jsonObject != null && jsonObject.has("properties")) {
-                JsonObject properties = jsonObject
-                    .getAsJsonArray("properties")
-                    .get(0)
-                    .getAsJsonObject();
-                if (properties.has("value")) {
-                    String value = properties.get("value").getAsString();
-                    byte[] decodedBytes = Base64.getDecoder().decode(value);
-                    return new String(decodedBytes);
-                }
-            }
+    private String extractUUID(String response) {
+        String[] parts = response.split("\"");
+        if (response.contains("Couldn't")) {
+            return "ERROR";
         }
+
+        if (parts.length >= 5) {
+            return parts[3];
+        }
+
         return null;
+    }
+
+    public String getUUIDFromName(String playerName) {
+        for (NetworkPlayerInfo info : Minecraft.getMinecraft()
+            .getNetHandler()
+            .getPlayerInfoMap()) {
+            if (info.getGameProfile().getName().equalsIgnoreCase(playerName)) {
+                return String.valueOf(info.getGameProfile().getId());
+            }
+        }
+        return null; // Player not found (probably not in tab list)
     }
 }
