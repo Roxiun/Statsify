@@ -10,11 +10,12 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 public class MojangApi {
 
     public String fetchUUID(String username) {
+        HttpURLConnection connection = null;
         try {
             String urlString =
                 "https://api.minecraftservices.com/minecraft/profile/lookup/name/" +
                 username;
-            HttpURLConnection connection = (HttpURLConnection) new URL(
+            connection = (HttpURLConnection) new URL(
                 urlString
             ).openConnection();
             connection.setRequestMethod("GET");
@@ -36,31 +37,46 @@ public class MojangApi {
 
             if (responseCode == 429) {
                 // Rate limited, fallback to minetools
-                urlString = "https://api.minetools.eu/uuid/" + username;
-                connection = (HttpURLConnection) new URL(
-                    urlString
-                ).openConnection();
-                connection.setRequestMethod("GET");
+                HttpURLConnection minetoolsConnection = null;
+                try {
+                    urlString = "https://api.minetools.eu/uuid/" + username;
+                    minetoolsConnection = (HttpURLConnection) new URL(
+                        urlString
+                    ).openConnection();
+                    minetoolsConnection.setRequestMethod("GET");
 
-                BufferedReader in = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream())
-                );
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = in.readLine()) != null) response.append(line);
-                in.close();
+                    BufferedReader in = new BufferedReader(
+                        new InputStreamReader(
+                            minetoolsConnection.getInputStream()
+                        )
+                    );
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = in.readLine()) != null) response.append(
+                        line
+                    );
+                    in.close();
 
-                if (
-                    response.toString().contains("\"id\": null")
-                ) return "ERROR";
-                String[] parts = response.toString().split("\"id\":\"");
-                if (parts.length > 1) {
-                    return parts[1].split("\"")[0];
-                } else {
-                    return "ERROR";
+                    if (
+                        response.toString().contains("\"id\": null")
+                    ) return "ERROR";
+                    String[] parts = response.toString().split("\"id\":\"");
+                    if (parts.length > 1) {
+                        return parts[1].split("\"")[0];
+                    } else {
+                        return "ERROR";
+                    }
+                } finally {
+                    if (minetoolsConnection != null) {
+                        minetoolsConnection.disconnect();
+                    }
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {} finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
 
         return "ERROR";
     }

@@ -23,13 +23,13 @@ public class NadeshikoApi {
     }
 
     public String nadeshikoAPI(String uuid) {
+        HttpURLConnection connection = null;
         try {
             String urlString =
                 "https://nadeshiko.io/player/" + uuid + "/network";
 
             URL url = new URL(urlString);
-            HttpURLConnection connection =
-                (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
             connection.setRequestProperty(
@@ -63,6 +63,10 @@ public class NadeshikoApi {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
         return "";
     }

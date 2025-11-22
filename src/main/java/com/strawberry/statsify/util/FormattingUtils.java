@@ -1,12 +1,14 @@
 package com.strawberry.statsify.util;
 
-import java.util.TreeMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class FormattingUtils {
 
-    private static final TreeMap<Integer, String> starBrackets = new TreeMap<>();
-    private static final TreeMap<Integer, String[]> starColors = new TreeMap<>();
+    private static final TreeMap<Integer, String> starBrackets =
+        new TreeMap<>();
+    private static final TreeMap<Integer, String[]> starColors =
+        new TreeMap<>();
 
     static {
         starBrackets.put(0, "§7[STARS]\u272b");
@@ -20,28 +22,91 @@ public class FormattingUtils {
         starBrackets.put(800, "§9[STARS]\u272b");
         starBrackets.put(900, "§5[STARS]\u272b");
 
-        starColors.put(1000, new String[]{"§6", "§e", "§a", "§b", "§d", "\u272a"});
-        starColors.put(1100, new String[]{"§f", "§f", "§f", "§f", "§f", "\u272a"});
-        starColors.put(1200, new String[]{"§e", "§e", "§e", "§e", "§6", "\u272a"});
-        starColors.put(1300, new String[]{"§b", "§b", "§b", "§b", "§3", "\u272a"});
-        starColors.put(1400, new String[]{"§a", "§a", "§a", "§a", "§2", "\u272a"});
-        starColors.put(1500, new String[]{"§3", "§3", "§3", "§3", "§9", "\u272a"});
-        starColors.put(1600, new String[]{"§c", "§c", "§c", "§c", "§4", "\u272a"});
-        starColors.put(1700, new String[]{"§d", "§d", "§d", "§d", "§5", "\u272a"});
-        starColors.put(1800, new String[]{"§9", "§9", "§9", "§9", "§1", "\u272a"});
-        starColors.put(1900, new String[]{"§5", "§5", "§5", "§5", "§8", "\u272a"});
+        starColors.put(
+            1000,
+            new String[] { "§6", "§e", "§a", "§b", "§d", "\u272a" }
+        );
+        starColors.put(
+            1100,
+            new String[] { "§f", "§f", "§f", "§f", "§f", "\u272a" }
+        );
+        starColors.put(
+            1200,
+            new String[] { "§e", "§e", "§e", "§e", "§6", "\u272a" }
+        );
+        starColors.put(
+            1300,
+            new String[] { "§b", "§b", "§b", "§b", "§3", "\u272a" }
+        );
+        starColors.put(
+            1400,
+            new String[] { "§a", "§a", "§a", "§a", "§2", "\u272a" }
+        );
+        starColors.put(
+            1500,
+            new String[] { "§3", "§3", "§3", "§3", "§9", "\u272a" }
+        );
+        starColors.put(
+            1600,
+            new String[] { "§c", "§c", "§c", "§c", "§4", "\u272a" }
+        );
+        starColors.put(
+            1700,
+            new String[] { "§d", "§d", "§d", "§d", "§5", "\u272a" }
+        );
+        starColors.put(
+            1800,
+            new String[] { "§9", "§9", "§9", "§9", "§1", "\u272a" }
+        );
+        starColors.put(
+            1900,
+            new String[] { "§5", "§5", "§5", "§5", "§8", "\u272a" }
+        );
 
-        starColors.put(2000, new String[]{"§7", "§f", "§f", "§7", "", "\u269d"});
-        starColors.put(2100, new String[]{"§f", "§e", "§e", "§6", "", "\u269d"});
-        starColors.put(2200, new String[]{"§6", "§f", "§b", "§3", "", "\u269d"});
-        starColors.put(2300, new String[]{"§5", "§d", "§d", "§6", "§e", "\u269d"});
-        starColors.put(2400, new String[]{"§b", "§f", "§f", "§7", "", "\u269d"});
-        starColors.put(2500, new String[]{"§f", "§a", "§a", "§2", "", "\u269d"});
-        starColors.put(2600, new String[]{"§4", "§c", "§c", "§d", "", "\u269d"});
-        starColors.put(2700, new String[]{"§e", "§f", "§f", "§8", "", "\u269d"});
-        starColors.put(2800, new String[]{"§a", "§2", "§2", "§6", "", "\u269d"});
-        starColors.put(2900, new String[]{"§b", "§3", "§3", "§9", "", "\u269d"});
-        starColors.put(3000, new String[]{"§e", "§6", "§6", "§c", "", "\u269d"});
+        starColors.put(
+            2000,
+            new String[] { "§7", "§f", "§f", "§7", "", "\u269d" }
+        );
+        starColors.put(
+            2100,
+            new String[] { "§f", "§e", "§e", "§6", "", "\u269d" }
+        );
+        starColors.put(
+            2200,
+            new String[] { "§6", "§f", "§b", "§3", "", "\u269d" }
+        );
+        starColors.put(
+            2300,
+            new String[] { "§5", "§d", "§d", "§6", "§e", "\u269d" }
+        );
+        starColors.put(
+            2400,
+            new String[] { "§b", "§f", "§f", "§7", "", "\u269d" }
+        );
+        starColors.put(
+            2500,
+            new String[] { "§f", "§a", "§a", "§2", "", "\u269d" }
+        );
+        starColors.put(
+            2600,
+            new String[] { "§4", "§c", "§c", "§d", "", "\u269d" }
+        );
+        starColors.put(
+            2700,
+            new String[] { "§e", "§f", "§f", "§8", "", "\u269d" }
+        );
+        starColors.put(
+            2800,
+            new String[] { "§a", "§2", "§2", "§6", "", "\u269d" }
+        );
+        starColors.put(
+            2900,
+            new String[] { "§b", "§3", "§3", "§9", "", "\u269d" }
+        );
+        starColors.put(
+            3000,
+            new String[] { "§e", "§6", "§6", "§c", "", "\u269d" }
+        );
     }
 
     public static String formatWinstreak(String text) {
@@ -61,13 +126,21 @@ public class FormattingUtils {
         try {
             int stars = Integer.parseInt(text);
             if (stars < 1000) {
-                return starBrackets.floorEntry(stars).getValue().replace("[STARS]", text);
+                return starBrackets
+                    .floorEntry(stars)
+                    .getValue()
+                    .replace("[STARS]", text);
             }
 
             Map.Entry<Integer, String[]> entry = starColors.floorEntry(stars);
             if (entry != null) {
                 String[] colors = entry.getValue();
-                String[] digits = text.split("");
+                char[] digits = text.toCharArray();
+
+                if (digits.length < 4) {
+                    return text;
+                }
+
                 if (stars < 2000) {
                      return colors[0] + digits[0] + colors[1] + digits[1] + colors[2] + digits[2] + colors[3] + digits[3] + colors[4] + colors[5];
                 } else if (stars < 3000) {
@@ -84,7 +157,6 @@ public class FormattingUtils {
         }
         return "NaN";
     }
-
 
     public static String formatRank(String rank) {
         return rank

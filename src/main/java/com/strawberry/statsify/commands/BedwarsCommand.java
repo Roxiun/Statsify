@@ -72,6 +72,16 @@ public class BedwarsCommand extends CommandBase {
                         )
                     )
                 );
+            } catch (Exception e) {
+                Minecraft.getMinecraft().addScheduledTask(() ->
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(
+                        new ChatComponentText(
+                            "§r[§bF§r] §cAn unexpected error occurred while fetching stats for: §r" +
+                                username
+                        )
+                    )
+                );
+                e.printStackTrace();
             }
         })
             .start();
