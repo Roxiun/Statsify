@@ -15,6 +15,12 @@ import net.minecraft.util.EnumChatFormatting;
 
 public class TagUtils {
 
+    private final NadeshikoApi nadeshikoApi;
+
+    public TagUtils(NadeshikoApi nadeshikoApi) {
+        this.nadeshikoApi = nadeshikoApi;
+    }
+
     public String buildTags(
         String name,
         String uuid,
@@ -112,7 +118,7 @@ public class TagUtils {
             e.printStackTrace();
         }
 
-        String playerData = new NadeshikoApi().nadeshikoAPI(uuid);
+        String playerData = nadeshikoApi.nadeshikoAPI(uuid);
         Pattern timestampPattern = Pattern.compile("\"first_login\":(\\d+),");
         Matcher timestampMatcher = timestampPattern.matcher(playerData);
         if (timestampMatcher.find()) {

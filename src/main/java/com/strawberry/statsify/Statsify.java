@@ -2,10 +2,10 @@ package com.strawberry.statsify;
 
 import com.strawberry.statsify.api.AuroraApi;
 import com.strawberry.statsify.api.HypixelApi;
+import com.strawberry.statsify.api.MojangApi;
 import com.strawberry.statsify.api.NadeshikoApi;
 import com.strawberry.statsify.api.PlanckeApi;
 import com.strawberry.statsify.api.UrchinApi;
-import com.strawberry.statsify.api.WinstreakApi;
 import com.strawberry.statsify.commands.BedwarsCommand;
 import com.strawberry.statsify.commands.ClearCacheCommand;
 import com.strawberry.statsify.commands.DenickCommand;
@@ -17,8 +17,8 @@ import com.strawberry.statsify.events.WorldLoadHandler;
 import com.strawberry.statsify.task.StatsChecker;
 import com.strawberry.statsify.util.NickUtils;
 import com.strawberry.statsify.util.NumberDenicker;
-import com.strawberry.statsify.util.PartyManager;
 import com.strawberry.statsify.util.PregameStats;
+import com.strawberry.statsify.util.TagUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class Statsify {
 
     public static final String MODID = "statsify";
     public static final String NAME = "Statsify";
-    public static final String VERSION = "4.2.0";
+    public static final String VERSION = "4.2.1";
 
     public static StatsifyOneConfig config;
     private final Map<String, List<String>> playerSuffixes = new HashMap<>();
@@ -42,18 +42,27 @@ public class Statsify {
         config = new StatsifyOneConfig();
 
         // APIs
-        HypixelApi hypixelApi = new HypixelApi();
+        MojangApi mojangApi = new MojangApi();
+        NadeshikoApi nadeshikoApi = new NadeshikoApi(mojangApi);
+        TagUtils tagUtils = new TagUtils(nadeshikoApi);
+        HypixelApi hypixelApi = new HypixelApi(nadeshikoApi, tagUtils);
         UrchinApi urchinApi = new UrchinApi();
         PlanckeApi planckeApi = new PlanckeApi();
-        NadeshikoApi nadeshikoApi = new NadeshikoApi();
-        WinstreakApi winstreakApi = new WinstreakApi(config);
         AuroraApi auroraApi = new AuroraApi();
 
         // Utils
         NickUtils nickUtils = new NickUtils();
-        NumberDenicker numberDenicker = new NumberDenicker(config, nickUtils);
-        PregameStats pregameStats = new PregameStats(config);
-        PartyManager.getInstance();
+        NumberDenicker numberDenicker = new NumberDenicker(
+            config,
+            nickUtils,
+            auroraApi
+        );
+        PregameStats pregameStats = new PregameStats(
+            config,
+            nadeshikoApi,
+            urchinApi,
+            mojangApi
+        );
 
         // Tasks
         StatsChecker statsChecker = new StatsChecker(
@@ -84,7 +93,7 @@ public class Statsify {
 
         // Commands
         ClientCommandHandler.instance.registerCommand(
-            new BedwarsCommand(config, nadeshikoApi, winstreakApi)
+            new BedwarsCommand(config, nadeshikoApi)
         );
         ClientCommandHandler.instance.registerCommand(new StatsifyCommand());
         ClientCommandHandler.instance.registerCommand(

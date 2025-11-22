@@ -1,6 +1,6 @@
 package com.strawberry.statsify.api;
 
-import com.strawberry.statsify.util.Utils;
+import com.strawberry.statsify.util.FormattingUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,7 +56,7 @@ public class PlanckeApi {
             parts[0].endsWith("]")
         ) {
             String unformattedRank = parts[0];
-            playerrank = Utils.formatRank(unformattedRank) + " ";
+            playerrank = FormattingUtils.formatRank(unformattedRank) + " ";
         }
         // Insane Regex Wow
         String regex =

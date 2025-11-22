@@ -32,9 +32,13 @@ public class NumberDenicker {
         "^(?:BED DESTRUCTION > )?(\\w+) (?:Bed|bed) was bed #([\\d,]+) destroyed by ([\\w-]+)!$"
     );
 
-    public NumberDenicker(StatsifyOneConfig config, NickUtils nickUtils) {
+    public NumberDenicker(
+        StatsifyOneConfig config,
+        NickUtils nickUtils,
+        AuroraApi auroraApi
+    ) {
         this.config = config;
-        this.auroraApi = new AuroraApi();
+        this.auroraApi = auroraApi;
         this.nickUtils = nickUtils;
     }
 

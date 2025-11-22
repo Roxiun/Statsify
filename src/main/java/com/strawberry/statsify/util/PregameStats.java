@@ -5,6 +5,7 @@ import com.strawberry.statsify.api.MojangApi;
 import com.strawberry.statsify.api.NadeshikoApi;
 import com.strawberry.statsify.api.UrchinApi;
 import com.strawberry.statsify.config.StatsifyOneConfig;
+import com.strawberry.statsify.util.PlayerUtils;
 import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
@@ -47,11 +48,16 @@ public class PregameStats {
         "^(?:\\[.*?\\]\\s*)*(\\w{3,16})(?::| ») (.*)$"
     );
 
-    public PregameStats(StatsifyOneConfig config) {
+    public PregameStats(
+        StatsifyOneConfig config,
+        NadeshikoApi nadeshikoApi,
+        UrchinApi urchinApi,
+        MojangApi mojangApi
+    ) {
         this.config = config;
-        this.nadeshikoApi = new NadeshikoApi();
-        this.urchinApi = new UrchinApi();
-        this.mojangApi = new MojangApi();
+        this.nadeshikoApi = nadeshikoApi;
+        this.urchinApi = urchinApi;
+        this.mojangApi = mojangApi;
     }
 
     /** called on world change */
@@ -117,18 +123,6 @@ public class PregameStats {
 
     /** handles API calls for a single user */
     private void handlePlayer(String username) {
-        // skip party members
-        try {
-            if (PartyManager.getInstance().inParty()) {
-                UUID uuid = UUID.fromString(
-                    mojangApi.getUUIDFromName(username)
-                );
-                if (PartyManager.getInstance().isPartyMember(uuid)) {
-                    return;
-                }
-            }
-        } catch (Exception ignored) {}
-
         if (config.pregameStats) {
             try {
                 String stats = nadeshikoApi.fetchPlayerStats(username);
@@ -169,7 +163,7 @@ public class PregameStats {
                     mc.thePlayer.addChatMessage(
                         new ChatComponentText(
                             "§r[§bF§r] §c⚠ §r" +
-                                Utils.getTabDisplayName(username) +
+                                PlayerUtils.getTabDisplayName(username) +
                                 " §ris §ctagged§r for: " +
                                 tags
                         )

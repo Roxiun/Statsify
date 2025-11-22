@@ -2,7 +2,7 @@ package com.strawberry.statsify.events;
 
 import com.strawberry.statsify.config.StatsifyOneConfig;
 import com.strawberry.statsify.util.NickUtils;
-import com.strawberry.statsify.util.Utils;
+import com.strawberry.statsify.util.PlayerUtils;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +62,9 @@ public class TabListHandler {
 
             if (suffixv != null && suffixv.size() >= 2) {
                 // Player has stats, so they are not nicked
-                String[] tabData = Utils.getTabDisplayName2(playerName);
-                String team = tabData[0], name = tabData[1];
+                String[] tabData = PlayerUtils.getTabDisplayName2(playerName);
+                String team = tabData[0],
+                    name = tabData[1];
 
                 String teamColor = team.length() >= 2
                     ? team.substring(0, 2)
@@ -110,7 +111,7 @@ public class TabListHandler {
                 }
             } else if (isNicked && !currentDisplayName.contains("§c[NICK]")) {
                 // Player is nicked, does not have stats
-                String[] tabData = Utils.getTabDisplayName2(playerName);
+                String[] tabData = PlayerUtils.getTabDisplayName2(playerName);
                 if (tabData != null && tabData.length >= 3) {
                     String team = tabData[0] != null ? tabData[0] : "";
                     String name = tabData[1] != null ? tabData[1] : "";

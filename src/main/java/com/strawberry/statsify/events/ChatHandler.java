@@ -6,7 +6,7 @@ import com.strawberry.statsify.task.StatsChecker;
 import com.strawberry.statsify.util.NickUtils;
 import com.strawberry.statsify.util.NumberDenicker;
 import com.strawberry.statsify.util.PregameStats;
-import com.strawberry.statsify.util.Utils;
+import com.strawberry.statsify.util.StringUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,7 +72,7 @@ public class ChatHandler {
         }
 
         if (message.startsWith(" ") && message.contains("Opponent:")) {
-            String username = Utils.parseUsername(message);
+            String username = StringUtils.parseUsername(message);
             new Thread(() -> {
                 try {
                     String stats = planckeApi.checkDuels(username);

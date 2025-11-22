@@ -2,7 +2,6 @@ package com.strawberry.statsify.commands;
 
 import com.mojang.authlib.GameProfile;
 import com.strawberry.statsify.api.NadeshikoApi;
-import com.strawberry.statsify.api.WinstreakApi;
 import com.strawberry.statsify.config.StatsifyOneConfig;
 import java.io.IOException;
 import java.util.List;
@@ -16,17 +15,11 @@ import net.minecraft.util.ChatComponentText;
 public class BedwarsCommand extends CommandBase {
 
     private final NadeshikoApi nadeshikoApi;
-    private final WinstreakApi winstreakApi;
     private final StatsifyOneConfig config;
 
-    public BedwarsCommand(
-        StatsifyOneConfig config,
-        NadeshikoApi nadeshikoApi,
-        WinstreakApi winstreakApi
-    ) {
+    public BedwarsCommand(StatsifyOneConfig config, NadeshikoApi nadeshikoApi) {
         this.config = config;
         this.nadeshikoApi = nadeshikoApi;
-        this.winstreakApi = winstreakApi;
     }
 
     @Override
@@ -53,14 +46,7 @@ public class BedwarsCommand extends CommandBase {
         String username = args[0];
         new Thread(() -> {
             try {
-                String stats;
-                if (config.statsSource == 1) {
-                    // Winstreak.ws
-                    stats = winstreakApi.fetchPlayerStats(username);
-                } else {
-                    // Nadeshiko
-                    stats = nadeshikoApi.fetchPlayerStats(username);
-                }
+                String stats = nadeshikoApi.fetchPlayerStats(username);
                 String finalStats = stats;
                 Minecraft.getMinecraft().addScheduledTask(() ->
                     Minecraft.getMinecraft().thePlayer.addChatMessage(

@@ -2,7 +2,8 @@ package com.strawberry.statsify.api;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.strawberry.statsify.util.Utils;
+import com.strawberry.statsify.util.FormattingUtils;
+import com.strawberry.statsify.util.PlayerUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,6 +15,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NadeshikoApi {
+
+    private final MojangApi mojangApi;
+
+    public NadeshikoApi(MojangApi mojangApi) {
+        this.mojangApi = mojangApi;
+    }
 
     public String nadeshikoAPI(String uuid) {
         try {
@@ -61,9 +68,9 @@ public class NadeshikoApi {
     }
 
     public String fetchPlayerStats(String playerName) throws IOException {
-        String uuid = Utils.getUUIDFromPlayerName(playerName);
+        String uuid = PlayerUtils.getUUIDFromPlayerName(playerName);
         if (uuid == null) {
-            uuid = new MojangApi().fetchUUID(playerName);
+            uuid = mojangApi.fetchUUID(playerName);
             if (uuid.equals("ERROR")) {
                 return (
                     " §cCould not find " +
@@ -89,7 +96,7 @@ public class NadeshikoApi {
         String level = ach.has("bedwars_level")
             ? ach.get("bedwars_level").getAsString()
             : "0";
-        level = Utils.formatStars(level);
+        level = FormattingUtils.formatStars(level);
 
         JsonObject bedwarsStats = rootObject
             .getAsJsonObject("stats")

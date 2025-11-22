@@ -4,7 +4,7 @@ import com.strawberry.statsify.api.HypixelApi;
 import com.strawberry.statsify.api.UrchinApi;
 import com.strawberry.statsify.config.StatsifyOneConfig;
 import com.strawberry.statsify.util.NickUtils;
-import com.strawberry.statsify.util.Utils;
+import com.strawberry.statsify.util.PlayerUtils;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -48,18 +48,17 @@ public class StatsChecker {
                         .replace("sniper", "§4§lSniper")
                         .replace("blatant_cheater", "§4§lBlatant Cheater")
                         .replace("closet_cheater", "§e§lCloset Cheater")
-                        .replace(
-                            "confirmed_cheater",
-                            "§4§lConfirmed Cheater"
-                        );
+                        .replace("confirmed_cheater", "§4§lConfirmed Cheater");
                     if (!tags.isEmpty()) {
                         mc.addScheduledTask(() ->
                             mc.thePlayer.addChatMessage(
                                 new ChatComponentText(
                                     "§r[§bF§r] §c\u26a0 §r" +
-                                    Utils.getTabDisplayName(playerName) +
-                                    " §ris §ctagged§r for: " +
-                                    tags
+                                        PlayerUtils.getTabDisplayName(
+                                            playerName
+                                        ) +
+                                        " §ris §ctagged§r for: " +
+                                        tags
                                 )
                             )
                         );
@@ -69,9 +68,9 @@ public class StatsChecker {
                         mc.thePlayer.addChatMessage(
                             new ChatComponentText(
                                 "§r[§bF§r] Failed to fetch tags for: " +
-                                playerName +
-                                " | " +
-                                e.getMessage()
+                                    playerName +
+                                    " | " +
+                                    e.getMessage()
                             )
                         )
                     );
@@ -109,8 +108,8 @@ public class StatsChecker {
                         mc.thePlayer.addChatMessage(
                             new ChatComponentText(
                                 "§r[§bF§r] Failed to fetch stats for: " +
-                                playerName +
-                                " | [UpstreamCSR] "
+                                    playerName +
+                                    " | [UpstreamCSR] "
                             )
                         )
                     );
@@ -143,8 +142,7 @@ public class StatsChecker {
                 mc.addScheduledTask(() ->
                     mc.thePlayer.addChatMessage(
                         new ChatComponentText(
-                            "§r[§bF§r] §cError while waiting: " +
-                            e.getMessage()
+                            "§r[§bF§r] §cError while waiting: " + e.getMessage()
                         )
                     )
                 );

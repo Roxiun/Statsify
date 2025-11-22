@@ -17,12 +17,6 @@ import com.strawberry.statsify.Statsify;
 
 public class StatsifyOneConfig extends Config {
 
-    @Dropdown(name = "Stats Source", options = { "Scraping" })
-    public int statsSource = 0;
-
-    // @Text(name = "Winstreak.ws API Key", secure = true, multiline = false)
-    public String winstreakKey = "";
-
     @Number(name = "Minimum FKDR", min = -1, max = 500, step = 1)
     public int minFkdr = -1;
 

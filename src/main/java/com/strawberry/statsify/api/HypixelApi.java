@@ -2,8 +2,9 @@ package com.strawberry.statsify.api;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.strawberry.statsify.util.FormattingUtils;
+import com.strawberry.statsify.util.PlayerUtils;
 import com.strawberry.statsify.util.TagUtils;
-import com.strawberry.statsify.util.Utils;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -13,9 +14,11 @@ import net.minecraft.util.EnumChatFormatting;
 public class HypixelApi {
 
     private final NadeshikoApi nadeshikoApi;
+    private final TagUtils tagUtils;
 
-    public HypixelApi() {
-        this.nadeshikoApi = new NadeshikoApi();
+    public HypixelApi(NadeshikoApi nadeshikoApi, TagUtils tagUtils) {
+        this.nadeshikoApi = nadeshikoApi;
+        this.tagUtils = tagUtils;
     }
 
     public String fetchBedwarsStats(
@@ -26,11 +29,11 @@ public class HypixelApi {
         Map<String, List<String>> playerSuffixes
     ) throws IOException {
         try {
-            String uuid = Utils.getUUIDFromPlayerName(playerName);
+            String uuid = PlayerUtils.getUUIDFromPlayerName(playerName);
             if (uuid == null) {
                 return (
                     "§cCould not find " +
-                    Utils.getTabDisplayName(playerName) +
+                    PlayerUtils.getTabDisplayName(playerName) +
                     " in the current lobby."
                 );
             }
@@ -39,7 +42,7 @@ public class HypixelApi {
             if (stjson == null || stjson.isEmpty()) {
                 return (
                     "§cFailed to get stats for " +
-                    Utils.getTabDisplayName(playerName)
+                    PlayerUtils.getTabDisplayName(playerName)
                 );
             }
 
@@ -54,7 +57,7 @@ public class HypixelApi {
             String levelStr = ach.has("bedwars_level")
                 ? ach.get("bedwars_level").getAsString()
                 : "0";
-            String formattedStars = Utils.formatStars(levelStr);
+            String formattedStars = FormattingUtils.formatStars(levelStr);
 
             JsonObject bedwarsStats = rootObject
                 .getAsJsonObject("stats")
@@ -101,7 +104,7 @@ public class HypixelApi {
             String formattedWinstreak = "";
             int winstreak = Integer.parseInt(wsStr.replace(",", "").trim());
             if (winstreak > 0) {
-                formattedWinstreak = Utils.formatWinstreak(wsStr);
+                formattedWinstreak = FormattingUtils.formatWinstreak(wsStr);
             }
 
             String tabfkdr = fkdrColor + formattedFkdr;
@@ -127,7 +130,7 @@ public class HypixelApi {
             }
 
             if (tags) {
-                String tagsValue = new TagUtils().buildTags(
+                String tagsValue = tagUtils.buildTags(
                     playerName,
                     uuid,
                     Integer.parseInt(levelStr),
@@ -141,7 +144,7 @@ public class HypixelApi {
                 }
                 if (formattedWinstreak.isEmpty()) {
                     return (
-                        Utils.getTabDisplayName(playerName) +
+                        PlayerUtils.getTabDisplayName(playerName) +
                         " §r" +
                         formattedStars +
                         "§r§7 |§r FKDR: " +
@@ -153,7 +156,7 @@ public class HypixelApi {
                     );
                 } else {
                     return (
-                        Utils.getTabDisplayName(playerName) +
+                        PlayerUtils.getTabDisplayName(playerName) +
                         " §r" +
                         formattedStars +
                         "§r§7 |§r FKDR: " +
@@ -169,7 +172,7 @@ public class HypixelApi {
             } else {
                 if (formattedWinstreak.isEmpty()) {
                     return (
-                        Utils.getTabDisplayName(playerName) +
+                        PlayerUtils.getTabDisplayName(playerName) +
                         " §r" +
                         formattedStars +
                         "§r§7 |§r FKDR: " +
@@ -179,7 +182,7 @@ public class HypixelApi {
                     );
                 } else {
                     return (
-                        Utils.getTabDisplayName(playerName) +
+                        PlayerUtils.getTabDisplayName(playerName) +
                         " §r" +
                         formattedStars +
                         "§r§7 |§r FKDR: " +
