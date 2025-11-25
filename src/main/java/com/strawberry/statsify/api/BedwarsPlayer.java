@@ -57,11 +57,26 @@ public class BedwarsPlayer {
     }
 
     public String getFkdrColor() {
-        if (fkdr >= 1 && fkdr < 3) return "§f";
-        if (fkdr >= 3 && fkdr < 8) return "§a";
-        if (fkdr >= 8 && fkdr < 16) return "§6";
-        if (fkdr >= 16 && fkdr < 25) return "§d";
-        if (fkdr > 25) return "§4";
-        return "§7";
+        if (fkdr >= 100) {
+            return "§5";
+        } else if (fkdr >= 50) {
+            return "§d";
+        } else if (fkdr >= 30) {
+            return "§4";
+        } else if (fkdr >= 20) {
+            return "§c";
+        } else if (fkdr >= 10) {
+            return "§6";
+        } else if (fkdr >= 7) {
+            return "§e";
+        } else if (fkdr >= 5) {
+            return "§2";
+        } else if (fkdr >= 3) {
+            return "§a";
+        } else if (fkdr >= 1) {
+            return "§f";
+        } else {
+            return "§7";
+        }
     }
 }
