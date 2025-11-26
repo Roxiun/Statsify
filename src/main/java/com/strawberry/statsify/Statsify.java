@@ -79,7 +79,12 @@ public class Statsify {
             nickUtils,
             auroraApi
         );
-        PregameStats pregameStats = new PregameStats(playerCache, config);
+        PregameStats pregameStats = new PregameStats(
+            playerCache,
+            config,
+            blacklistManager,
+            mojangApi
+        );
 
         // Tasks
         StatsChecker statsChecker = new StatsChecker(

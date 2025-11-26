@@ -2,12 +2,16 @@ package com.strawberry.statsify.util.player;
 
 import cc.polyfrost.oneconfig.utils.hypixel.HypixelUtils;
 import com.strawberry.statsify.api.bedwars.BedwarsPlayer;
+import com.strawberry.statsify.api.mojang.MojangApi;
 import com.strawberry.statsify.api.urchin.UrchinTag;
 import com.strawberry.statsify.cache.PlayerCache;
 import com.strawberry.statsify.config.StatsifyOneConfig;
 import com.strawberry.statsify.data.PlayerProfile;
+import com.strawberry.statsify.util.blacklist.BlacklistManager;
+import com.strawberry.statsify.util.blacklist.BlacklistedPlayer;
 import com.strawberry.statsify.util.formatting.FormattingUtils;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,6 +28,8 @@ public class PregameStats {
     private final Minecraft mc = Minecraft.getMinecraft();
     private final PlayerCache playerCache;
     private final StatsifyOneConfig config;
+    private final BlacklistManager blacklistManager;
+    private final MojangApi mojangApi;
 
     // runtime state
     private boolean inPregameLobby = false;
@@ -38,9 +44,16 @@ public class PregameStats {
         "^(?:\\[.*?\\]\\s*)*(\\w{3,16})(?::| ») (.*)$"
     );
 
-    public PregameStats(PlayerCache playerCache, StatsifyOneConfig config) {
+    public PregameStats(
+        PlayerCache playerCache,
+        StatsifyOneConfig config,
+        BlacklistManager blacklistManager,
+        MojangApi mojangApi
+    ) {
         this.playerCache = playerCache;
         this.config = config;
+        this.blacklistManager = blacklistManager;
+        this.mojangApi = mojangApi;
     }
 
     public void onWorldChange() {
@@ -64,6 +77,14 @@ public class PregameStats {
         Matcher joinMatch = BEDWARS_JOIN_PATTERN.matcher(message);
         if (joinMatch.find()) {
             inPregameLobby = true;
+            String username = joinMatch.group(1);
+            if (username.equalsIgnoreCase(mc.thePlayer.getName())) return;
+            if (!alreadyLookedUp.add(username.toLowerCase())) return;
+
+            new Thread(
+                () -> handlePlayer(username),
+                "Statsify-PregameThread"
+            ).start();
             return;
         }
 
@@ -92,6 +113,39 @@ public class PregameStats {
     }
 
     private void handlePlayer(String username) {
+        // Prioritize local UUID check
+        String uuidString = mojangApi.getUUIDFromName(username);
+        if (uuidString == null) {
+            // Fallback to API if not in session
+            uuidString = mojangApi.fetchUUID(username);
+        }
+
+        if (uuidString != null && !uuidString.equals("ERROR")) {
+            if (!uuidString.contains("-")) {
+                uuidString = uuidString.replaceFirst(
+                    "([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{12})",
+                    "$1-$2-$3-$4-$5"
+                );
+            }
+            UUID playerUUID = UUID.fromString(uuidString);
+            if (blacklistManager.isBlacklisted(playerUUID)) {
+                BlacklistedPlayer blacklistedPlayer =
+                    blacklistManager.getBlacklistedPlayer(playerUUID);
+                String reason = blacklistedPlayer.getReason();
+                mc.addScheduledTask(() ->
+                    mc.thePlayer.addChatMessage(
+                        new ChatComponentText(
+                            "§r[§bStatsify§r] §cBlacklisted player joined: " +
+                                username +
+                                " §4(Reason: " +
+                                reason +
+                                ")"
+                        )
+                    )
+                );
+            }
+        }
+
         PlayerProfile profile = playerCache.getProfile(username);
 
         if (profile == null || profile.getBedwarsPlayer() == null) {
