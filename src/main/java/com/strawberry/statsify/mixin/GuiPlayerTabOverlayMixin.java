@@ -56,11 +56,6 @@ public class GuiPlayerTabOverlayMixin {
         String team = tabData[0];
         String name = tabData[1];
 
-        // This is the new feature implementation
-        if (stats.isUrchinTagged()) {
-            name = "§c⚠ " + name;
-        }
-
         String teamColor = team.length() >= 2 ? team.substring(0, 2) : "";
         String newDisplayName = formatDisplayNameWithStats(
             team,
@@ -118,6 +113,10 @@ public class GuiPlayerTabOverlayMixin {
 
         if (winstreak != null && !winstreak.isEmpty()) {
             newDisplayName += MIDDLE_DOT + "§r" + winstreak;
+        }
+
+        if (stats.isUrchinTagged()) {
+            newDisplayName += " §c⚠";
         }
 
         return newDisplayName;
