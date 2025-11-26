@@ -50,6 +50,8 @@ public class StatsChecker {
             if (nickUtils.isNicked(playerName)) continue;
 
             executor.submit(() -> {
+                // Force a refresh by clearing the player from the cache first
+                playerCache.clearPlayer(playerName);
                 PlayerProfile profile = playerCache.getProfile(playerName);
 
                 if (profile == null || profile.getBedwarsPlayer() == null) {

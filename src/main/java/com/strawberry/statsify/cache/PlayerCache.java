@@ -18,8 +18,6 @@ import net.minecraft.util.ChatComponentText;
 
 public class PlayerCache {
 
-    private static final long CACHE_DURATION_MS = TimeUnit.MINUTES.toMillis(5);
-
     private final Map<String, PlayerProfile> cache = new ConcurrentHashMap<>();
     private final MojangApi mojangApi;
     private final StatsProvider statsProvider;
@@ -45,7 +43,7 @@ public class PlayerCache {
         String lowerCaseName = playerName.toLowerCase();
         PlayerProfile profile = cache.get(lowerCaseName);
 
-        if (profile != null && !isExpired(profile)) {
+        if (profile != null) {
             return profile;
         }
 
@@ -106,12 +104,5 @@ public class PlayerCache {
 
     public void clearPlayer(String playerName) {
         cache.remove(playerName.toLowerCase());
-    }
-
-    private boolean isExpired(PlayerProfile profile) {
-        return (
-            System.currentTimeMillis() - profile.getLastUpdated() >
-            CACHE_DURATION_MS
-        );
     }
 }
