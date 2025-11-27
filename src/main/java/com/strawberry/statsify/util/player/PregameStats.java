@@ -6,8 +6,10 @@ import com.strawberry.statsify.api.urchin.UrchinTag;
 import com.strawberry.statsify.cache.PlayerCache;
 import com.strawberry.statsify.config.StatsifyOneConfig;
 import com.strawberry.statsify.data.PlayerProfile;
+import com.strawberry.statsify.util.blacklist.BlacklistManager;
 import com.strawberry.statsify.util.formatting.FormattingUtils;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,6 +26,7 @@ public class PregameStats {
     private final Minecraft mc = Minecraft.getMinecraft();
     private final PlayerCache playerCache;
     private final StatsifyOneConfig config;
+    private final BlacklistManager blacklistManager;
 
     // runtime state
     private boolean inPregameLobby = false;
@@ -38,9 +41,14 @@ public class PregameStats {
         "^(?:\\[.*?\\]\\s*)*(\\w{3,16})(?::| ») (.*)$"
     );
 
-    public PregameStats(PlayerCache playerCache, StatsifyOneConfig config) {
+    public PregameStats(
+        PlayerCache playerCache,
+        StatsifyOneConfig config,
+        BlacklistManager blacklistManager
+    ) {
         this.playerCache = playerCache;
         this.config = config;
+        this.blacklistManager = blacklistManager;
     }
 
     public void onWorldChange() {
@@ -107,6 +115,31 @@ public class PregameStats {
                 );
             }
             return;
+        }
+
+        String uuidString = profile.getUuid();
+        if (!uuidString.contains("-")) {
+            uuidString = uuidString.replaceFirst(
+                "([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{12})",
+                "$1-$2-$3-$4-$5"
+            );
+        }
+
+        UUID uuid = UUID.fromString(uuidString);
+        if (blacklistManager.isBlacklisted(uuid)) {
+            String reason = blacklistManager
+                .getBlacklistedPlayer(uuid)
+                .getReason();
+            mc.addScheduledTask(() ->
+                mc.thePlayer.addChatMessage(
+                    new ChatComponentText(
+                        "§r[§bStatsify§r] §c" +
+                            username +
+                            " is on your blacklist: " +
+                            reason
+                    )
+                )
+            );
         }
 
         if (config.pregameStats) {
