@@ -122,6 +122,12 @@ public class StatsifyOneConfig extends Config {
     @Switch(name = "Enable Number Denicker", category = "Number Denicker")
     public boolean numberDenicker = false;
 
+    @Switch(
+        name = "Print all potential players & distance",
+        category = "Number Denicker"
+    )
+    public boolean numberDenickerFuzzy = false;
+
     @Text(
         name = "Aurora API Key",
         placeholder = "Enter your Aurora API key",

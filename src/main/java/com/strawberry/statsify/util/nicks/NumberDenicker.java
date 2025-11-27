@@ -180,16 +180,18 @@ public class NumberDenicker {
                         )
                         .collect(Collectors.joining(", "));
 
-                    mc.addScheduledTask(() ->
-                        mc.thePlayer.addChatMessage(
-                            new ChatComponentText(
-                                "§4[ND] §aFound potential " +
-                                    type +
-                                    " players: " +
-                                    fuzzy_players_log
+                    if (config.numberDenickerFuzzy) {
+                        mc.addScheduledTask(() ->
+                            mc.thePlayer.addChatMessage(
+                                new ChatComponentText(
+                                    "§4[ND] §aFound potential " +
+                                        type +
+                                        " players: " +
+                                        fuzzy_players_log
+                                )
                             )
-                        )
-                    );
+                        );
+                    }
 
                     if (type.equals("finals")) {
                         player.fuzzy_finals_potentials = fuzzy_matches;
