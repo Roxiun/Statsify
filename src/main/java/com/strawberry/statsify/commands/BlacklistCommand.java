@@ -113,10 +113,11 @@ public class BlacklistCommand extends CommandBase {
             UUID uuid = UUID.fromString(uuidString);
 
             if ("add".equalsIgnoreCase(subCommand)) {
+                String reason = "";
                 if (args.length < 3) {
-                    reason = "(none)"
+                    reason = "(none)";
                 } else {
-                    String reason = String.join(
+                    reason = String.join(
                         " ",
                         Arrays.copyOfRange(args, 2, args.length)
                     );
