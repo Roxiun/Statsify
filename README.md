@@ -37,10 +37,11 @@ This project is a fork continuation of <a href="https://github.com/xanning/Fonta
 <details>
 <summary>Showcase</summary>
 
-![image](https://github.com/user-attachments/assets/de154698-8eac-49c7-884f-eedd31f4385f)
-![image](https://github.com/user-attachments/assets/d0ba280e-930f-439d-b6ed-3a258f778100)
-![image](https://github.com/user-attachments/assets/58d5a619-fb04-48c3-b0da-19df92880c6b)
-![image](https://github.com/user-attachments/assets/002a5a66-a5fd-49a1-b1be-7a45a8647553)
+![Tabstats Example 2](https://github.com/user-attachments/assets/654cc0d4-bc77-4110-b5f2-1592007acd0d)
+![Tabstats and Skin Denicker Example 1](https://github.com/user-attachments/assets/a7d7c3b7-5181-45b8-a80c-cf944fd203a0)
+<img width="1440" height="900" alt="Mellow" src="https://github.com/user-attachments/assets/f9162aaf-8ceb-4203-b778-a23836a391ef" />
+<img width="1440" height="900" alt="Settings" src="https://github.com/user-attachments/assets/3da167f9-8748-48b6-80eb-f10d1c3aabd2" />
+<img width="1440" height="900" alt="Authie" src="https://github.com/user-attachments/assets/209a7730-6e93-4896-bf9b-3a98d2b8e432" />
 
 
 </div>
@@ -67,7 +68,7 @@ To check an **individual**'s Bedwars stats type `/bw <username>`
 
 To add a player to your **blacklist** type `/blacklist add <username>`
 
-To **skin denick** type `/skindenick skin <username>`
+To **skin denick** type `/skindenick <username>`
 
 To use the **number denicker** add the Aurora API key, you can get a key from [here](https://discord.com/oauth2/authorize?client_id=1244205279697174539), automatic during game, you can also manually use `/denick <finals | beds> <number>` afterwards
 
