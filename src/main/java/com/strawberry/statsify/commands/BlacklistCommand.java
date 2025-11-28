@@ -114,18 +114,14 @@ public class BlacklistCommand extends CommandBase {
 
             if ("add".equalsIgnoreCase(subCommand)) {
                 if (args.length < 3) {
-                    Minecraft.getMinecraft().addScheduledTask(() ->
-                        ChatUtils.sendCommandMessage(
-                            sender,
-                            "§cInvalid usage! Use /blacklist add <player> <reason>"
-                        )
+                    reason = "(none)"
+                } else {
+                    String reason = String.join(
+                        " ",
+                        Arrays.copyOfRange(args, 2, args.length)
                     );
-                    return;
                 }
-                String reason = String.join(
-                    " ",
-                    Arrays.copyOfRange(args, 2, args.length)
-                );
+
                 blacklistManager.addPlayer(uuid, playerName, reason);
                 Minecraft.getMinecraft().addScheduledTask(() ->
                     ChatUtils.sendCommandMessage(

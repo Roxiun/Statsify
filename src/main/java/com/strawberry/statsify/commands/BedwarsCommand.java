@@ -45,6 +45,11 @@ public class BedwarsCommand extends CommandBase {
         }
 
         String username = args[0];
+
+        ChatUtils.sendCommandMessage(
+            sender,
+            "§r§7Fetching stats for " + username + "..."
+        );
         new Thread(() -> {
             PlayerProfile profile = playerCache.getProfile(username);
 

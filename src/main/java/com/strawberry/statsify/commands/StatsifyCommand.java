@@ -1,5 +1,7 @@
 package com.strawberry.statsify.commands;
 
+import java.util.Arrays;
+import java.util.List;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
@@ -8,12 +10,17 @@ public class StatsifyCommand extends CommandBase {
 
     @Override
     public String getCommandName() {
-        return "st";
+        return "mellow";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/st";
+        return "/mellow";
+    }
+
+    @Override
+    public List<String> getCommandAliases() {
+        return Arrays.asList("st");
     }
 
     @Override
@@ -28,12 +35,25 @@ public class StatsifyCommand extends CommandBase {
         sender.addChatMessage(new ChatComponentText(""));
         sender.addChatMessage(
             new ChatComponentText(
+                "§r§7Settings can be found in the OneConfig menu"
+            )
+        );
+        sender.addChatMessage(new ChatComponentText(""));
+
+        sender.addChatMessage(new ChatComponentText(""));
+        sender.addChatMessage(
+            new ChatComponentText(
                 "§r§5/bw <username>:§d Manually check bedwars stats of a player.§r"
             )
         );
         sender.addChatMessage(
             new ChatComponentText(
                 "§r§5/blacklist <add | remove | list> <player> <reason>:§d Add a player to your local blacklist.§r"
+            )
+        );
+        sender.addChatMessage(
+            new ChatComponentText(
+                "§r§5/urchin <username>:§d View a player's urchin tags.§r"
             )
         );
         sender.addChatMessage(
