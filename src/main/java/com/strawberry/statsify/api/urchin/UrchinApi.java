@@ -45,14 +45,14 @@ public class UrchinApi {
             }
 
             URL url = new URL(
-                "https://coral.urchin.ws/api/urchin?uuid=" + uuid
+                "https://coral.urchin.gg/api/urchin?uuid=" + uuid
             );
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("User-Agent", "Mozilla/5.0");
             conn.setRequestProperty(
                 "Referer",
-                "https://coral.urchin.ws/player/" + uuid
+                "https://coral.urchin.gg/player/" + uuid
             );
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(5000);
@@ -164,13 +164,13 @@ public class UrchinApi {
 
     public int fetchPingBlocking(String uuid) {
         try {
-            URL url = new URL("https://coral.urchin.ws/api/ping?uuid=" + uuid);
+            URL url = new URL("https://coral.urchin.gg/api/ping?uuid=" + uuid);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("User-Agent", "Mozilla/5.0");
             conn.setRequestProperty(
                 "Referer",
-                "https://coral.urchin.ws/player/" + uuid
+                "https://coral.urchin.gg/player/" + uuid
             );
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(5000);

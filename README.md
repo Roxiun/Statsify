@@ -24,7 +24,7 @@ This project is a fork continuation of <a href="https://github.com/xanning/Fonta
 
 - Urchin API Tags support
 
-- Check any player's bedwars stats with `/bw`
+- Check any player's Bedwars stats with `/bw`
 
 - No API key required for core features
 
@@ -63,7 +63,7 @@ To **check the stats of players in your game**, type `/who` in-game, or enable A
 
 To display **help command** type `/st`
 
-To check an **individual**'s bedwars stats type `/bw <username>`
+To check an **individual**'s Bedwars stats type `/bw <username>`
 
 To add a player to your **blacklist** type `/blacklist add <username>`
 
