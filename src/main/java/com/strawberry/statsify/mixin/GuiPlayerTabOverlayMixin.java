@@ -55,7 +55,7 @@ public class GuiPlayerTabOverlayMixin {
                 playerUUID,
                 cir
             );
-        } else if (isNicked && !originalDisplayName.contains("§8[§cNICK§8]")) {
+        } else if (isNicked && !originalDisplayName.contains("§8[§5NICK§8]")) {
             handleNickedPlayer(
                 playerName,
                 originalDisplayName,
@@ -186,9 +186,9 @@ public class GuiPlayerTabOverlayMixin {
             String name = tabData[1] != null ? tabData[1] : "";
             String suffix = tabData[2] != null ? tabData[2] : "";
             String teamColor = team.length() >= 2 ? team.substring(0, 2) : "";
-            newDisplayName = team + "§8[§cNICK§8] " + teamColor + name + suffix;
+            newDisplayName = team + "§8[§5NICK§8] " + teamColor + name + suffix;
         } else {
-            newDisplayName = "§8[§cNICK§8] " + originalDisplayName;
+            newDisplayName = "§8[§5NICK§8] " + originalDisplayName;
         }
 
         if (
