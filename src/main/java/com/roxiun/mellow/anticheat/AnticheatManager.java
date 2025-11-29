@@ -1,5 +1,6 @@
 package com.roxiun.mellow.anticheat;
 
+import cc.polyfrost.oneconfig.utils.hypixel.HypixelUtils;
 import com.roxiun.mellow.Mellow;
 import com.roxiun.mellow.anticheat.check.Check;
 import com.roxiun.mellow.anticheat.check.impl.AutoBlockCheck;
@@ -15,6 +16,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -99,14 +105,42 @@ public class AnticheatManager {
             long timeSinceLastAlert =
                 System.currentTimeMillis() - checkData.lastAlertTime;
             if (timeSinceLastAlert >= cooldown) {
-                String message = String.format(
-                    "§8[§cAC§8] §7%s §ffailed §c%s §7(%s) §c[VL: %.1f]",
-                    player.getName(),
-                    check.getName(),
-                    info,
-                    checkData.violations
+                // Main message component
+                IChatComponent mainMessage = new ChatComponentText(
+                    String.format(
+                        "§8[§cAC§8] §7%s §ffailed §c%s §7(%s) §c[VL: %.1f]",
+                        player.getName(),
+                        check.getName(),
+                        info,
+                        checkData.violations
+                    )
                 );
-                ChatUtils.sendMessage(message);
+
+                // Add WDR button if on Hypixel
+                if (HypixelUtils.INSTANCE.isHypixel()) {
+                    IChatComponent reportButton = new ChatComponentText(
+                        " §8[§cWDR§8]"
+                    );
+                    ChatStyle style = new ChatStyle();
+                    style.setChatClickEvent(
+                        new ClickEvent(
+                            ClickEvent.Action.RUN_COMMAND,
+                            "/wdr " + player.getName()
+                        )
+                    );
+                    style.setChatHoverEvent(
+                        new HoverEvent(
+                            HoverEvent.Action.SHOW_TEXT,
+                            new ChatComponentText(
+                                "Click to report " + player.getName()
+                            )
+                        )
+                    );
+                    reportButton.setChatStyle(style);
+                    mainMessage.appendSibling(reportButton);
+                }
+
+                ChatUtils.sendMessage(mainMessage);
 
                 checkData.lastAlertTime = System.currentTimeMillis();
             }
