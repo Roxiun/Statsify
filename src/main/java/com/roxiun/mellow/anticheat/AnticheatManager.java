@@ -125,7 +125,8 @@ public class AnticheatManager {
                     style.setChatClickEvent(
                         new ClickEvent(
                             ClickEvent.Action.RUN_COMMAND,
-                            "/wdr " + player.getName()
+                            "/wdr " +
+                                player.getName().replaceAll("§.", "").trim()
                         )
                     );
                     style.setChatHoverEvent(
