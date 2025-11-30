@@ -105,6 +105,23 @@ public class ACPlayerData {
         }
     }
 
+    // AutoBlock Check specific fields
+    public List<SwingData> swingHistory = new ArrayList<>();
+    public long lastSwingDetected = 0;
+
+    public static class SwingData {
+
+        public long time;
+        public boolean wasBlockingBefore;
+        public Boolean wasBlockingAfter; // Using Boolean to allow null
+
+        public SwingData(long time, boolean wasBlockingBefore) {
+            this.time = time;
+            this.wasBlockingBefore = wasBlockingBefore;
+            this.wasBlockingAfter = null;
+        }
+    }
+
     public static class CheckData {
 
         public double violations = 0;
