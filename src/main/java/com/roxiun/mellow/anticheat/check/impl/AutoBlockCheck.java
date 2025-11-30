@@ -1,5 +1,6 @@
 package com.roxiun.mellow.anticheat.check.impl;
 
+import com.roxiun.mellow.Mellow;
 import com.roxiun.mellow.anticheat.AnticheatManager;
 import com.roxiun.mellow.anticheat.check.Check;
 import com.roxiun.mellow.anticheat.data.ACPlayerData;
@@ -19,6 +20,7 @@ public class AutoBlockCheck extends Check {
         TickEvent.PlayerTickEvent event,
         ACPlayerData data
     ) {
+        if (!Mellow.config.autoBlockCheckEnabled) return;
         EntityPlayer player = data.getPlayer();
         if (player == null || player == Minecraft.getMinecraft().thePlayer) {
             // Don't check self

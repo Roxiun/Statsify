@@ -1,5 +1,6 @@
 package com.roxiun.mellow.anticheat.check.impl;
 
+import com.roxiun.mellow.Mellow;
 import com.roxiun.mellow.anticheat.AnticheatManager;
 import com.roxiun.mellow.anticheat.check.Check;
 import com.roxiun.mellow.anticheat.data.ACPlayerData;
@@ -25,6 +26,7 @@ public class NoSlowCheck extends Check {
         TickEvent.PlayerTickEvent event,
         ACPlayerData data
     ) {
+        if (!Mellow.config.noSlowCheckEnabled) return;
         EntityPlayer player = data.getPlayer();
         if (
             player == null ||
