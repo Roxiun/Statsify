@@ -6,11 +6,9 @@ import com.roxiun.mellow.api.hypixel.HypixelFeatures;
 
 public class EmeraldCounterHUD extends SingleTextHud {
 
-    public static final OneColor EMPTY_COLOR = new OneColor(0, 0, 0, 0);
-
     public EmeraldCounterHUD() {
         super(
-            "Emeralds", // title is actually useful now
+            "§aEmeralds", // title is actually useful now
             true, // enabled obviously
             5, // x
             25, // y
@@ -20,10 +18,10 @@ public class EmeraldCounterHUD extends SingleTextHud {
             0, // NO rounded corners
             0, // no x padding why would i want it
             0, // no y padding for the same reason
-            EMPTY_COLOR, // no background color
+            new OneColor(0, 0, 0, 0), // no background color
             false, // no border
             0, // NO border
-            EMPTY_COLOR // no border color
+            new OneColor(0, 0, 0, 0) // no border color
         );
         textType = 1;
     }
@@ -37,7 +35,7 @@ public class EmeraldCounterHUD extends SingleTextHud {
 
     @Override
     protected String getText(boolean example) {
-        if (example) return "§b25§as";
+        if (example) return "(§f2§a): §715s";
         else {
             return HypixelFeatures.getInstance().getEmeraldCounterText();
         }

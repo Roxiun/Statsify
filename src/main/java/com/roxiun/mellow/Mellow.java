@@ -4,6 +4,7 @@ import com.roxiun.mellow.anticheat.AnticheatManager;
 import com.roxiun.mellow.api.aurora.AuroraApi;
 import com.roxiun.mellow.api.bedwars.HypixelApi;
 import com.roxiun.mellow.api.duels.PlanckeApi;
+import com.roxiun.mellow.api.hypixel.HypixelFeatures;
 import com.roxiun.mellow.api.mojang.MojangApi;
 import com.roxiun.mellow.api.provider.AbyssApi;
 import com.roxiun.mellow.api.provider.NadeshikoApi;
@@ -14,6 +15,7 @@ import com.roxiun.mellow.commands.*;
 import com.roxiun.mellow.config.MellowOneConfig;
 import com.roxiun.mellow.data.TabStats;
 import com.roxiun.mellow.events.ChatHandler;
+import com.roxiun.mellow.events.EmeraldTimerHandler;
 import com.roxiun.mellow.events.WorldLoadHandler;
 import com.roxiun.mellow.task.StatsChecker;
 import com.roxiun.mellow.util.blacklist.BlacklistManager;
@@ -115,6 +117,9 @@ public class Mellow {
         );
         MinecraftForge.EVENT_BUS.register(
             new WorldLoadHandler(numberDenicker, pregameStats, nickUtils)
+        );
+        MinecraftForge.EVENT_BUS.register(
+            new EmeraldTimerHandler(HypixelFeatures.getInstance())
         );
 
         // Commands

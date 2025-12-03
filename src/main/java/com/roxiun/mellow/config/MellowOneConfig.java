@@ -3,6 +3,7 @@ package com.roxiun.mellow.config;
 import cc.polyfrost.oneconfig.config.Config;
 import cc.polyfrost.oneconfig.config.annotations.Button;
 import cc.polyfrost.oneconfig.config.annotations.Dropdown;
+import cc.polyfrost.oneconfig.config.annotations.HUD;
 import cc.polyfrost.oneconfig.config.annotations.Info;
 import cc.polyfrost.oneconfig.config.annotations.Number;
 import cc.polyfrost.oneconfig.config.annotations.Switch;
@@ -13,6 +14,7 @@ import cc.polyfrost.oneconfig.config.data.ModType;
 import cc.polyfrost.oneconfig.config.data.OptionSize;
 import cc.polyfrost.oneconfig.utils.NetworkUtils;
 import com.roxiun.mellow.Mellow;
+import com.roxiun.mellow.hud.EmeraldCounterHUD;
 
 public class MellowOneConfig extends Config {
 
@@ -27,6 +29,9 @@ public class MellowOneConfig extends Config {
 
     @Switch(name = "Print Stats to Chat", subcategory = "General")
     public boolean printStats = false;
+
+    @HUD(name = "Emerald Counter HUD", category = "HUD")
+    public EmeraldCounterHUD emeraldCounterHUD = new EmeraldCounterHUD();
 
     @Number(
         name = "Minimum FKDR to show",

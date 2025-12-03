@@ -1,5 +1,6 @@
 package com.roxiun.mellow.events;
 
+import com.roxiun.mellow.api.hypixel.HypixelFeatures;
 import com.roxiun.mellow.util.nicks.NickUtils;
 import com.roxiun.mellow.util.nicks.NumberDenicker;
 import com.roxiun.mellow.util.player.PregameStats;
@@ -27,5 +28,8 @@ public class WorldLoadHandler {
         numberDenicker.onWorldChange();
         pregameStats.onWorldChange();
         nickUtils.clearNicks();
+
+        // Reset emerald timer when world loads (leaving a game)
+        HypixelFeatures.getInstance().resetEmeraldTimer();
     }
 }
