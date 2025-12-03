@@ -83,13 +83,17 @@ sourceSets { main { output.setResourcesDir(java.classesDirectory) } }
 
 // Adds the Polyfrost maven repository so that we can get the libraries necessary to develop the
 // mod.
-repositories { maven("https://repo.polyfrost.org/releases") }
+repositories {
+    maven("https://repo.polyfrost.org/releases")
+    maven("https://repo.hypixel.net/repository/Hypixel/")
+}
 
 configurations { shade }
 
 // Configures the libraries/dependencies for your mod.
 dependencies {
     shade("com.squareup.okhttp3:okhttp:4.9.3") { exclude(group = "org.jetbrains.kotlin") }
+    implementation("net.hypixel:mod-api:1.0")
     // Adds the OneConfig library, so we can develop with it.
     modCompileOnly("cc.polyfrost:oneconfig-$platform:0.2.2-alpha+")
 

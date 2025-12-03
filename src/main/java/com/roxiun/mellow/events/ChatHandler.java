@@ -58,14 +58,13 @@ public class ChatHandler {
         numberDenicker.onChat(event);
         pregameStats.onChat(event);
         String message = event.message.getUnformattedText();
-        if (config.autoWho) {
-            if (
-                message.contains(
-                    "Protect your bed and destroy the enemy beds."
-                ) &&
-                !(message.contains(":")) &&
-                !(message.contains("SHOUT"))
-            ) {
+
+        if (
+            message.contains("Protect your bed and destroy the enemy beds.") &&
+            !(message.contains(":")) &&
+            !(message.contains("SHOUT"))
+        ) {
+            if (config.autoWho) {
                 mc.thePlayer.sendChatMessage("/who");
             }
         }
