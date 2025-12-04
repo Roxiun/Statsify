@@ -6,6 +6,8 @@ import com.roxiun.mellow.config.MellowOneConfig;
 import com.roxiun.mellow.data.PlayerProfile;
 import com.roxiun.mellow.data.TabStats;
 import com.roxiun.mellow.util.ChatUtils;
+import com.roxiun.mellow.util.UUIDUtils;
+import com.roxiun.mellow.util.blacklist.BlacklistManager;
 import com.roxiun.mellow.util.formatting.FormattingUtils;
 import com.roxiun.mellow.util.nicks.NickUtils;
 import com.roxiun.mellow.util.player.PlayerUtils;
@@ -23,6 +25,7 @@ public class StatsChecker {
     private final MellowOneConfig config;
     private final Map<String, TabStats> tabStats;
     private final TagUtils tagUtils;
+    private final BlacklistManager blacklistManager;
     private final Minecraft mc = Minecraft.getMinecraft();
 
     public StatsChecker(
@@ -30,13 +33,15 @@ public class StatsChecker {
         NickUtils nickUtils,
         MellowOneConfig config,
         Map<String, TabStats> tabStats,
-        TagUtils tagUtils
+        TagUtils tagUtils,
+        BlacklistManager blacklistManager
     ) {
         this.playerCache = playerCache;
         this.nickUtils = nickUtils;
         this.config = config;
         this.tabStats = tabStats;
         this.tagUtils = tagUtils;
+        this.blacklistManager = blacklistManager;
     }
 
     public void checkPlayerStats(List<String> onlinePlayers) {
@@ -141,6 +146,24 @@ public class StatsChecker {
                             }
                         }
                     }
+                }
+
+                // Check if player is on blacklist and print a message if they are
+                java.util.UUID uuid = UUIDUtils.fromString(profile.getUuid());
+                if (blacklistManager.isBlacklisted(uuid)) {
+                    String reason = blacklistManager
+                        .getBlacklistedPlayer(uuid)
+                        .getReason();
+                    mc.addScheduledTask(() -> {
+                        ChatUtils.sendMessage(
+                            "§c" +
+                                profile.getName() +
+                                " is on your blacklist: " +
+                                reason
+                        );
+                        // Play pling sound when blacklisted player is detected
+                        mc.thePlayer.playSound("note.pling", 1.0F, 1.0F);
+                    });
                 }
             });
         }

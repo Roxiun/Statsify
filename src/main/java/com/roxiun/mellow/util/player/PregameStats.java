@@ -6,6 +6,7 @@ import com.roxiun.mellow.cache.PlayerCache;
 import com.roxiun.mellow.config.MellowOneConfig;
 import com.roxiun.mellow.data.PlayerProfile;
 import com.roxiun.mellow.util.ChatUtils;
+import com.roxiun.mellow.util.UUIDUtils;
 import com.roxiun.mellow.util.blacklist.BlacklistManager;
 import com.roxiun.mellow.util.formatting.FormattingUtils;
 import java.util.Set;
@@ -113,15 +114,7 @@ public class PregameStats {
             return;
         }
 
-        String uuidString = profile.getUuid();
-        if (!uuidString.contains("-")) {
-            uuidString = uuidString.replaceFirst(
-                "([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{12})",
-                "$1-$2-$3-$4-$5"
-            );
-        }
-
-        UUID uuid = UUID.fromString(uuidString);
+        UUID uuid = UUIDUtils.fromString(profile.getUuid());
         if (blacklistManager.isBlacklisted(uuid)) {
             String reason = blacklistManager
                 .getBlacklistedPlayer(uuid)

@@ -105,7 +105,8 @@ public class Mellow {
             nickUtils,
             config,
             tabStats,
-            tagUtils
+            tagUtils,
+            blacklistManager
         );
 
         // Event Handlers
