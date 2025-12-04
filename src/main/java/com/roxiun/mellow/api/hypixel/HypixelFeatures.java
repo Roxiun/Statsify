@@ -66,7 +66,7 @@ public class HypixelFeatures {
 
         if (secondsSinceGameStart == 1) {
             emeraldStage = 1;
-            timeUntilEmerald = 30;
+            timeUntilEmerald = 96;
         } else if (secondsSinceGameStart == 720) {
             // 36 seconds = 720 ticks
             emeraldStage = 2;
@@ -201,7 +201,7 @@ public class HypixelFeatures {
             timeString = String.valueOf(timeUntilEmerald);
         }
 
-        return "(§f" + emeraldSpawnCount + "§a): §7" + timeString + "s";
+        return "§2(§f" + emeraldSpawnCount + "§2): §7" + timeString + "s";
     }
 
     private String getFormattedDiamondCountText() {
@@ -212,6 +212,6 @@ public class HypixelFeatures {
             timeString = String.valueOf(timeUntilDiamond);
         }
 
-        return "(§f" + diamondSpawnCount + "§b): §7" + timeString + "s";
+        return "§b(§f" + diamondSpawnCount + "§b): §7" + timeString + "s";
     }
 }

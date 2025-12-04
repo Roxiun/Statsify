@@ -8,7 +8,7 @@ public class DiamondCounterHUD extends SingleTextHud {
 
     public DiamondCounterHUD() {
         super(
-            "§bDiamonds", // title is actually useful now
+            "", // title is actually useful now
             true, // enabled obviously
             5, // x
             45, // y - placed below emerald counter
@@ -35,7 +35,7 @@ public class DiamondCounterHUD extends SingleTextHud {
 
     @Override
     protected String getText(boolean example) {
-        if (example) return "(§f2§b): §715s";
+        if (example) return "§b(§f2§b): §715s";
         else {
             return HypixelFeatures.getInstance().getDiamondCounterText();
         }
