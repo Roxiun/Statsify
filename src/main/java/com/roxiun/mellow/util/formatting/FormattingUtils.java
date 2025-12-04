@@ -178,7 +178,8 @@ public class FormattingUtils {
                     if (
                         tag.getTagName() != null &&
                         !tag.getTagName().isEmpty() &&
-                        !"seraph.verified".equals(tag.getTagName())
+                        !"seraph.verified".equals(tag.getTagName()) &&
+                        !"seraph.advertisement".equals(tag.getTagName())
                     ) {
                         // Format mapped tags nicely, or show unmapped ones with nice formatting
                         String formattedTag = formatSeraphTag(tag.getTagName());

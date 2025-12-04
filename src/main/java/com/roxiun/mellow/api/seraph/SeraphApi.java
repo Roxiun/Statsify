@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.roxiun.mellow.api.mojang.MojangApi;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,10 +25,8 @@ public class SeraphApi {
         this.mojangApi = mojangApi;
     }
 
-    public List<SeraphTag> fetchSeraphTags(
-        String uuid,
-        String seraphApiKey
-    ) throws IOException {
+    public List<SeraphTag> fetchSeraphTags(String uuid, String seraphApiKey)
+        throws IOException {
         try {
             // If the UUID is invalid for any reason, throw an exception
             if (uuid == null || uuid.equals("ERROR") || uuid.isEmpty()) {
@@ -100,12 +97,24 @@ public class SeraphApi {
                             ? tagObj.get("textColor").getAsInt()
                             : 0;
 
-                        // Skip seraph.verified tags
-                        if ("seraph.verified".equals(tagName)) {
+                        // Skip seraph.verified and seraph.advertisement tags
+                        if (
+                            "seraph.verified".equals(tagName) ||
+                            "seraph.advertisement".equals(tagName)
+                        ) {
                             continue;
                         }
 
-                        tags.add(new SeraphTag(icon, tooltip, color, tagName, text, textColor));
+                        tags.add(
+                            new SeraphTag(
+                                icon,
+                                tooltip,
+                                color,
+                                tagName,
+                                text,
+                                textColor
+                            )
+                        );
                     }
                     return tags;
                 }
