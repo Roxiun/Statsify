@@ -203,7 +203,7 @@ public class MellowOneConfig extends Config {
     public int maxResults = 0; // Index for 5
 
     @Switch(name = "Enable Anticheat", category = "Anticheat")
-    public boolean anticheatEnabled = true;
+    public boolean anticheatEnabled = false;
 
     @Switch(name = "NoSlow Check", category = "Anticheat")
     public boolean noSlowCheckEnabled = true;
@@ -212,10 +212,10 @@ public class MellowOneConfig extends Config {
     public boolean autoBlockCheckEnabled = true;
 
     @Switch(name = "Eagle Check", category = "Anticheat")
-    public boolean eagleCheckEnabled = true;
+    public boolean eagleCheckEnabled = false;
 
     @Switch(name = "Scaffold Check", category = "Anticheat")
-    public boolean scaffoldCheckEnabled = true;
+    public boolean scaffoldCheckEnabled = false;
 
     @Number(
         name = "Violation Level",
