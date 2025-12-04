@@ -99,7 +99,7 @@ public class StatsChecker {
                 // Print Urchin tags to chat if enabled
                 if (
                     config.urchin &&
-                    config.printUrchinTags &&
+                    config.printBlacklistTags &&
                     profile.isUrchinTagged()
                 ) {
                     String tags = FormattingUtils.formatUrchinTags(
@@ -116,7 +116,11 @@ public class StatsChecker {
                 }
 
                 // Print Seraph tags to chat if enabled
-                if (config.seraph && profile.isSeraphTagged()) {
+                if (
+                    config.seraph &&
+                    config.printBlacklistTags &&
+                    profile.isSeraphTagged()
+                ) {
                     String formattedTags = FormattingUtils.formatSeraphTags(
                         profile.getSeraphTags()
                     );

@@ -53,14 +53,8 @@ public class MellowOneConfig extends Config {
     )
     public int statsProvider = 0;
 
-    @Switch(name = "Enable Urchin", subcategory = "Tags")
-    public boolean urchin = false;
-
-    @Switch(name = "Print Urchin Tags in /who", subcategory = "Tags")
-    public boolean printUrchinTags = true;
-
-    @Switch(name = "Enable Seraph", subcategory = "Tags")
-    public boolean seraph = false;
+    @Switch(name = "Print Blacklist Tags in /who", subcategory = "General")
+    public boolean printBlacklistTags = true;
 
     @Switch(name = "Auto Pregame Stats", subcategory = "Pregame")
     public boolean pregameStats = true;
@@ -81,12 +75,31 @@ public class MellowOneConfig extends Config {
 
     // Urchin Configs
     @Info(
+        text = "Urchin is a community blacklist, allowing you to see potential cheaters in your game",
+        size = OptionSize.DUAL,
+        type = InfoType.INFO,
+        category = "Urchin"
+    )
+    public static boolean ignoredUrchinDescription;
+
+    @Switch(name = "Enable Urchin", category = "Urchin")
+    public boolean urchin = false;
+
+    @Info(
+        text = "Enabling Urchin will send requests to them and be subject to their ToS, this could enable tracking of your data (IP, Urchin API Key, Game Info).",
+        size = OptionSize.DUAL,
+        type = InfoType.WARNING,
+        category = "Urchin"
+    )
+    public static boolean ignoredUrchinWarning;
+
+    @Info(
         text = "Urchin does not require a key to view tags, these settings are deprecated",
         size = OptionSize.DUAL,
         type = InfoType.INFO,
         category = "Urchin"
     )
-    public static boolean ignored4;
+    public static boolean ignoredUrchinDeprecated;
 
     @Text(
         name = "Urchin API Key",
@@ -97,6 +110,33 @@ public class MellowOneConfig extends Config {
     public String urchinKey = "";
 
     // Seraph Configs
+    @Info(
+        text = "Seraph is a community blacklist, allowing you to see potential cheaters in your game",
+        size = OptionSize.DUAL,
+        type = InfoType.INFO,
+        category = "Seraph"
+    )
+    public static boolean ignoredSeraphDescription;
+
+    @Switch(name = "Enable Seraph", category = "Seraph")
+    public boolean seraph = false;
+
+    @Info(
+        text = "Enabling Seraph will send requests to them and be subject to their ToS, this could enable tracking of your data (IP, Seraph API Key, Game Info).",
+        size = OptionSize.DUAL,
+        type = InfoType.WARNING,
+        category = "Seraph"
+    )
+    public static boolean ignoredSeraphWarning;
+
+    @Info(
+        text = "Seraph does not require a key to view any tags older than 1 week old",
+        size = OptionSize.DUAL,
+        type = InfoType.INFO,
+        category = "Seraph"
+    )
+    public static boolean ignoredSeraphInfo;
+
     @Text(
         name = "Seraph API Key",
         category = "Seraph",
@@ -119,7 +159,7 @@ public class MellowOneConfig extends Config {
         size = OptionSize.DUAL,
         category = "Ping"
     )
-    public static boolean ignored3;
+    public static boolean ignoredPolsuAPI;
 
     @Button(
         name = "Polsu API Key",
@@ -147,7 +187,7 @@ public class MellowOneConfig extends Config {
         size = OptionSize.DUAL,
         category = "Number Denicker"
     )
-    public static boolean ignored2; // Useless. Java limitations with @annotation.
+    public static boolean ignoredNumberDenickerInfo; // Useless. Java limitations with @annotation.
 
     @Button(
         name = "Run /api view on the bot to get your key",
@@ -173,7 +213,7 @@ public class MellowOneConfig extends Config {
         size = OptionSize.DUAL,
         category = "Number Denicker"
     )
-    public static boolean ignored5;
+    public static boolean ignoredNumberDenickerFuzzyInfo;
 
     @Text(
         name = "Aurora API Key",
