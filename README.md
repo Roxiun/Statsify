@@ -24,7 +24,10 @@ This project is a fork continuation of <a href="https://github.com/xanning/Fonta
  to view ping numerically instead of as bars.
 
 - Supports Urchin API Tags
+
 - Supports Seraph API Tags
+
+- Import your own local blacklist
 
 - Check any player's BedWars stats with `/bw`
 
@@ -66,6 +69,8 @@ To **check the stats of players in your game**, type `/who` in-game, or enable A
 To check an **individual player’s** BedWars stats, type `/bw <username>`
 
 To add a player to your **blacklist**, type `/blacklist add <username>`
+
+You can **import** your own **blacklist** by doing, type `/blacklist sync <filename>`, place the file in `.minecraft/config/mellow`
 
 To **skin denick** type `/skindenick <username>`
 
