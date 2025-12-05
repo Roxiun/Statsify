@@ -193,7 +193,22 @@ public class ChatHandler {
         if (scoreboard != null) {
             ScoreObjective objective = scoreboard.getObjectiveInDisplaySlot(1); // Sidebar objective
             if (objective != null) {
-                // Check all lines in the scoreboard for indicators of doubles vs fours
+                // Check teams (which are often the actual scoreboard lines)
+                java.util.Collection<
+                    net.minecraft.scoreboard.ScorePlayerTeam
+                > teams = scoreboard.getTeams();
+                for (net.minecraft.scoreboard.ScorePlayerTeam team : teams) {
+                    String displayName = team.getTeamName();
+                    if (displayName != null) {
+                        String cleanName = displayName.replaceAll("§.", ""); // Remove formatting codes
+                        // Check for "Pink" to determine if it's doubles mode (like the JS version)
+                        if (cleanName.contains("Pink")) {
+                            return "doubles";
+                        }
+                    }
+                }
+
+                // Also check scores as fallback
                 java.util.Collection<Score> scores = scoreboard.getSortedScores(
                     objective
                 );
@@ -201,32 +216,9 @@ public class ChatHandler {
                     String scoreName = score.getPlayerName();
                     if (scoreName != null) {
                         String cleanLine = scoreName.replaceAll("§.", ""); // Remove formatting codes
-                        // Check for doubles indicators (2s, doubles, etc.)
-                        if (
-                            cleanLine.toLowerCase().contains("2s") ||
-                            cleanLine.toLowerCase().contains("doubles")
-                        ) {
+                        // Check for "Pink" to determine if it's doubles mode (like the JS version)
+                        if (cleanLine.contains("Pink")) {
                             return "doubles";
-                        }
-                        // Check for fours indicators (4s, fours, 4v4, etc.)
-                        if (
-                            cleanLine.toLowerCase().contains("4s") ||
-                            cleanLine.toLowerCase().contains("fours")
-                        ) {
-                            return "fours";
-                        }
-                        // Check for specific game modes that indicate doubles or fours
-                        if (
-                            cleanLine.toLowerCase().contains("double") ||
-                            cleanLine.contains("Pink")
-                        ) {
-                            return "doubles";
-                        }
-                        if (
-                            cleanLine.toLowerCase().contains("quad") ||
-                            cleanLine.toLowerCase().contains("4v4")
-                        ) {
-                            return "fours";
                         }
                     }
                 }
