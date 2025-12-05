@@ -153,7 +153,13 @@ public class BedwarsUpgradesTrapsManager {
     }
 
     private void removeTrapFromQueue(String trapName) {
-        activeTraps.removeIf(trap -> trap.equalsIgnoreCase(trapName));
+        // Only remove the first occurrence of the trap, not all instances
+        for (int i = 0; i < activeTraps.size(); i++) {
+            if (activeTraps.get(i).equalsIgnoreCase(trapName)) {
+                activeTraps.remove(i);
+                break; // Only remove the first matching trap
+            }
+        }
     }
 
     private int extractLevel(String item) {
