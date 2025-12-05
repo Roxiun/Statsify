@@ -405,9 +405,9 @@ public class GuiPlayerTabOverlayMixin {
                 boolean isNicked = Mellow.nickUtils.isNicked(name);
                 if (isNicked) {
                     if (Mellow.config.showNickWithBrackets) {
-                        return new String[] { "§8[§5NICK§8]", "false" };
+                        return new String[] { "§5[§lNICK§r§5]", "false" };
                     } else {
-                        return new String[] { "§5NICK", "false" };
+                        return new String[] { "§5§lNICK", "false" };
                     }
                 } else if (stars != null && !stars.isEmpty()) {
                     if (Mellow.config.showStarsWithBrackets) {
