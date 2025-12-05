@@ -169,7 +169,7 @@ public class GuiPlayerTabOverlayMixin {
             playerUUID != null &&
             Mellow.blacklistManager.isBlacklisted(playerUUID)
         ) {
-            return displayName + " §8[§6BL§8]";
+            return displayName + " §8[§4LIST§8]";
         }
         return displayName;
     }
