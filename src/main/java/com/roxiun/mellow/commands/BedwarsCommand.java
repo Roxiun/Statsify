@@ -83,10 +83,9 @@ public class BedwarsCommand extends CommandBase {
                 String tags = FormattingUtils.formatUrchinTags(
                     profile.getUrchinTags()
                 );
-                String urchinMessage =
-                    "§c" + username + " is tagged on §5Urchin§c for: " + tags;
+                String urchinMessage = "§5§lUrchin§r§5: " + tags;
                 Minecraft.getMinecraft().addScheduledTask(() ->
-                    ChatUtils.sendCommandMessage(sender, urchinMessage)
+                    ChatUtils.sendMultilineCommandMessage(sender, urchinMessage)
                 );
             }
 
@@ -100,20 +99,19 @@ public class BedwarsCommand extends CommandBase {
                     tagMessages.length > 0 && !tagMessages[0].trim().isEmpty()
                 ) {
                     // Send the first tag with the main message
-                    String firstMessage =
-                        "§c" +
-                        username +
-                        " is tagged on §3Seraph§c for: " +
-                        tagMessages[0];
+                    String firstMessage = "§3§lSeraph§r§3: " + tagMessages[0];
                     Minecraft.getMinecraft().addScheduledTask(() ->
-                        ChatUtils.sendCommandMessage(sender, firstMessage)
+                        ChatUtils.sendMultilineCommandMessage(
+                            sender,
+                            firstMessage
+                        )
                     );
                     // Send additional tags as separate messages
                     for (int i = 1; i < tagMessages.length; i++) {
                         if (!tagMessages[i].trim().isEmpty()) {
                             String additionalMessage = "§c" + tagMessages[i];
                             Minecraft.getMinecraft().addScheduledTask(() ->
-                                ChatUtils.sendCommandMessage(
+                                ChatUtils.sendMultilineCommandMessage(
                                     sender,
                                     additionalMessage
                                 )

@@ -8,7 +8,7 @@ public class DiamondCounterHUD extends SingleTextHud {
 
     public DiamondCounterHUD() {
         super(
-            "Diamonds", // title is actually useful now
+            "§bDiamonds", // title is actually useful now
             false, // enabled obviously
             5, // x
             45, // y - placed below emerald counter
