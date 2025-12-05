@@ -21,7 +21,7 @@ public class BedwarsUpgradesTrapsHUD extends TextHud {
         name = "Roman Numerals",
         description = "Use Roman numerals (I, II, III, IV) instead of numbers"
     )
-    public boolean romanNumerals = false;
+    public boolean romanNumerals = true;
 
     @Dropdown(
         name = "Heading Color",
@@ -45,7 +45,7 @@ public class BedwarsUpgradesTrapsHUD extends TextHud {
             "White",
         }
     )
-    public int headingColorIndex = 13; // Index for Light Purple (matches original purple &d)
+    public int headingColorIndex = 5; // Index for dark purple
 
     @Dropdown(
         name = "Text Color",
@@ -73,7 +73,7 @@ public class BedwarsUpgradesTrapsHUD extends TextHud {
 
     public BedwarsUpgradesTrapsHUD() {
         super(
-            false, // enabled by default
+            true, // enabled by default
             5, // x
             65, // y - placed below emerald and diamond counters
             1, // normal size
