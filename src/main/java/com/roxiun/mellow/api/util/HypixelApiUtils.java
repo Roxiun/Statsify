@@ -113,7 +113,7 @@ public class HypixelApiUtils {
         int bedsLost = bedwarsStats.has("beds_lost_bedwars")
             ? bedwarsStats.get("beds_lost_bedwars").getAsInt()
             : 0;
-        int finals = finalKills + finalDeaths; // Calculate finals as finalKills + finalDeaths
+        int finals = finalKills; // Calculate finals as finalKills + finalDeaths
 
         return new BedwarsPlayer(
             name,
