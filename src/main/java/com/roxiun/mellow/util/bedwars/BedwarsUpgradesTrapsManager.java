@@ -19,6 +19,7 @@ public class BedwarsUpgradesTrapsManager {
     private int cushionedBoots = 0; // Cushioned Boots
     private int forgeLevel = 0; // Forge upgrades (Iron, Golden, Emerald, Molten)
     private boolean healPool = false; // Heal Pool
+    private int deadShot = 0; // deadShot
     private final List<String> activeTraps = new ArrayList<>();
 
     // Forge level mapping
@@ -45,6 +46,7 @@ public class BedwarsUpgradesTrapsManager {
         cushionedBoots = 0;
         forgeLevel = 0;
         healPool = false;
+        deadShot = 0;
         activeTraps.clear();
     }
 
@@ -114,6 +116,12 @@ public class BedwarsUpgradesTrapsManager {
         if (item.toLowerCase().startsWith("heal pool")) {
             healPool = true;
             return;
+        }
+
+        // deadShot (Armed)
+        if (item.toLowerCase().startsWith("deadShot")) {
+            int level = extractLevel(item);
+            deadShot = Math.max(deadShot, level > 0 ? level : 1);
         }
     }
 
@@ -299,13 +307,22 @@ public class BedwarsUpgradesTrapsManager {
             lines.add(textColorCode + "Heal Pool");
         }
 
+        if (deadShot > 0) {
+            String name = useShortNames ? getShortName("deadShot") : "deadShot";
+            String level = useRomanNumerals
+                ? getRomanNumeral(deadShot)
+                : String.valueOf(deadShot);
+            lines.add(textColorCode + name + " §7" + level);
+        }
+
         if (
             sharpSwords == 0 &&
             reinforcedArmor == 0 &&
             maniacMiner == 0 &&
             cushionedBoots == 0 &&
             forgeLevel == 0 &&
-            !healPool
+            !healPool &&
+            deadShot == 0
         ) {
             lines.add(textColorCode + "None");
         }
@@ -458,6 +475,10 @@ public class BedwarsUpgradesTrapsManager {
 
     public boolean hasHealPool() {
         return healPool;
+    }
+
+    public int getDeadShot() {
+        return deadShot;
     }
 
     public List<String> getActiveTraps() {

@@ -107,7 +107,7 @@ public class BedwarsUpgradesTrapsHUD extends TextHud {
             lines.add("");
             lines.add("§d§lTraps:");
             lines.add("§fCounter-Offensive Trap");
-            lines.add("§fIt's a Trap! Trap");
+            lines.add("§fBlindness Trap");
         } else {
             lines.clear();
             MinecraftColor headingColor = MinecraftColor.fromIndex(
