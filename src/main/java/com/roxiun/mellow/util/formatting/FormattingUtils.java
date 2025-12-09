@@ -130,17 +130,44 @@ public class FormattingUtils {
         return tags
             .stream()
             .map(tag -> {
-                String formattedType = tag
-                    .getType()
-                    .replace("sniper", "§4§lSniper")
-                    .replace("blatant_cheater", "§4§lBlatant Cheater")
-                    .replace("closet_cheater", "§e§lCloset Cheater")
-                    .replace("confirmed_cheater", "§4§lConfirmed Cheater")
-                    .replace("possible_sniper", "§e§lPossible Sniper")
-                    .replace("legit_sniper", "§e§lLegit Sniper")
-                    .replace("caution", "§e§lCaution")
-                    .replace("account", "§e§lAccount")
-                    .replace("info", "§f§lInfo");
+                String type = tag.getType();
+                String formattedType;
+
+                // Use exact string matches to avoid substring replacement issues
+                switch (type.toLowerCase()) {
+                    case "sniper":
+                        formattedType = "§4§lSniper";
+                        break;
+                    case "blatant_cheater":
+                        formattedType = "§4§lBlatant Cheater";
+                        break;
+                    case "closet_cheater":
+                        formattedType = "§e§lCloset Cheater";
+                        break;
+                    case "confirmed_cheater":
+                        formattedType = "§4§lConfirmed Cheater";
+                        break;
+                    case "possible_sniper":
+                        formattedType = "§e§lPossible Sniper";
+                        break;
+                    case "legit_sniper":
+                        formattedType = "§e§lLegit Sniper";
+                        break;
+                    case "caution":
+                        formattedType = "§e§lCaution";
+                        break;
+                    case "account":
+                        formattedType = "§e§lAccount";
+                        break;
+                    case "info":
+                        formattedType = "§f§lInfo";
+                        break;
+                    default:
+                        // For unknown types, use the original type as-is
+                        formattedType = type;
+                        break;
+                }
+
                 return formattedType + " §7(" + tag.getReason() + ")";
             })
             .collect(Collectors.joining(", "));
