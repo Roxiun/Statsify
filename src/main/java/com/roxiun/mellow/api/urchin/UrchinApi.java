@@ -44,9 +44,7 @@ public class UrchinApi {
                 );
             }
 
-            URL url = new URL(
-                "https://coral.urchin.gg/api/urchin?uuid=" + uuid
-            );
+            URL url = new URL("https://urchin.ws/player/" + uuid);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("User-Agent", "Mozilla/5.0");
